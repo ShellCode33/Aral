@@ -15,9 +15,9 @@ using namespace std;
 
 class DataSender {
 private:
-    struct sockaddr_in serv_addr;
-    int serv_sock;
-    string message;
+    struct sockaddr_in _serv_addr;
+    int _serv_sock;
+    string _message;
 
 public:
     DataSender();

@@ -1,0 +1,42 @@
+#include "coordinates.h"
+
+Coordinates::Coordinates(double latitude, double longitude, Cap cap)
+    : _latitude{latitude}, _longitude{longitude}, _cap{cap}
+{
+    srand(time(NULL));
+}
+
+Coordinates::Coordinates()
+{
+    _latitude = rand() % 181; // 0 -- 180
+    (rand() % 2 == 0 ? _latitude *= -1 : _latitude);
+    _longitude = rand() % 181; // 0 -- 180
+    (rand() % 2 == 0 ? _longitude *= -1 : _longitude);
+    _cap = NORTH;
+}
+
+double Coordinates::get_latitude() {
+    return this->_latitude;
+}
+
+double Coordinates::get_longitude() {
+    return this->_longitude;
+}
+
+Cap Coordinates::get_cap() {
+    return this->_cap;
+}
+
+string Coordinates::toString() {
+    string str =  std::to_string(_latitude) + ","
+            + std::to_string(_longitude) + ";";
+    if(this->_cap == NORTH)
+        str += "N";
+    else if(this->_cap == EAST)
+        str += "E";
+    else if(this->_cap == SOUTH)
+        str += "S";
+    else if(this->_cap == WEST)
+        str += "W";
+    return str;
+}

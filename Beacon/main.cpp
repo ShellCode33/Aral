@@ -11,8 +11,8 @@
 
 using namespace std;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
+
     Clock timer = Clock();
     DataSender* sender = new DataSender();
     timer.set_alarm(Moment(0, 0, 1, 0, 0));

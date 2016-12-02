@@ -1,23 +1,22 @@
 #include "datasender.h"
 
 DataSender::DataSender()
-    : serv_addr {0}, message {}
+    : _serv_addr {0}, _message {}
 {
-    serv_addr.sin_port = htons(PORT);
-    serv_addr.sin_family = AF_INET;
+    _serv_addr.sin_port = htons(PORT);
+    _serv_addr.sin_family = AF_INET;
 
-    if (inet_aton(SERV_ADDR, &serv_addr.sin_addr)==0) {
+    if (inet_aton(SERV_ADDR, &_serv_addr.sin_addr)==0) {
         cerr << "inet_aton failed" << endl;
     }
 
-    serv_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //création du socket
-    if (serv_sock < 0)
-    {
+    _serv_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //création du socket
+    if (_serv_sock < 0) {
         cerr << "Can't create socket" << endl;
     }
 }
 
 void DataSender::send_string(string coordinates) {
-    if(sendto(serv_sock, coordinates.c_str(), coordinates.length(), 0, (struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in)) < 0) //On envoie un paquet contenant la chaine de caractères
+    if(sendto(_serv_sock, coordinates.c_str(), coordinates.length(), 0, (struct sockaddr *)&_serv_addr, sizeof(struct sockaddr_in)) < 0) //On envoie un paquet contenant la chaine de caractères
         cerr << "socket error" << endl;
 }
