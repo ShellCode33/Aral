@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
         }
     }
 
+    sender->close_socket();
+
     delete sender;
     return 0;
 }

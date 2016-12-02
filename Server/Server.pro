@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
     coordinates.cpp \

@@ -27,6 +27,7 @@ string DataReceiver::receive_string() {
     int bytes_received = recvfrom(_serv_sock, _buffer, BUFFER_SIZE-1, 0, (struct sockaddr*)&_client_addr, &_ssize); //On essaye de lire BUFFER_SIZE octets sur le socket
 
     if(bytes_received > 0) {
+        _data_recvd = "";
         _data_recvd.append(_buffer, _buffer + bytes_received); //On ajoute ce qu'on a recu dans le string "result"
     }
 
@@ -35,6 +36,9 @@ string DataReceiver::receive_string() {
         _data_recvd = "";
     }
 
-
     return _data_recvd;
+}
+
+void DataReceiver::close_socket() {
+    close(_serv_sock);
 }

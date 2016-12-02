@@ -19,4 +19,6 @@ int main(int argc, char **argv) {
         cout << "Received: " << received << endl;
         received = "";
     }
+
+    receiver.close_socket();
 }

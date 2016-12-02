@@ -5,8 +5,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <unistd.h>
+#include <stdio.h>
+#include <stdio.h>
 #include <string>
+#include <unistd.h>
 
 #define PORT 25600
 #define BUFFER_SIZE 4096
@@ -27,6 +29,8 @@ public:
     DataReceiver();
 
     string receive_string();
+
+    void close_socket();
 };
 
 #endif // DATARECEIVER_H

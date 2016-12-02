@@ -23,6 +23,8 @@ public:
     DataSender();
 
     void send_string(string coordinates);
+
+    void close_socket();
 };
 
 #endif // DATASENDER_H

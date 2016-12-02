@@ -20,3 +20,7 @@ void DataSender::send_string(string coordinates) {
     if(sendto(_serv_sock, coordinates.c_str(), coordinates.length(), 0, (struct sockaddr *)&_serv_addr, sizeof(struct sockaddr_in)) < 0) //On envoie un paquet contenant la chaine de caractères
         cerr << "socket error" << endl;
 }
+
+void DataSender::close_socket() {
+    close(_serv_sock);
+}
