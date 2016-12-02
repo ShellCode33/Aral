@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string>
 #include <unistd.h>
+#include <vector>
+#include <coordinates.h>
 
 #define PORT 25600
 #define BUFFER_SIZE 4096
@@ -24,6 +26,8 @@ private:
     char _buffer[BUFFER_SIZE];
     string _data_recvd;
     socklen_t _ssize;
+
+    vector<Coordinates*> _coordinates; // stocke les coordonnées reçues
 
 public:
     DataReceiver();

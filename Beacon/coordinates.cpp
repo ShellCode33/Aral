@@ -1,18 +1,21 @@
 #include "coordinates.h"
 
 Coordinates::Coordinates(double latitude, double longitude, Cap cap)
-    : _latitude{latitude}, _longitude{longitude}, _cap{cap}
+    : _latitude{latitude}, _longitude{longitude}, _cap{cap}, _time {}
 {
     srand(time(NULL));
 }
 
 Coordinates::Coordinates()
 {
+    time_t date_time = time(nullptr);
     _latitude = rand() % 181; // 0 -- 180
     (rand() % 2 == 0 ? _latitude *= -1 : _latitude);
     _longitude = rand() % 181; // 0 -- 180
     (rand() % 2 == 0 ? _longitude *= -1 : _longitude);
     _cap = NORTH;
+    _time = asctime(localtime(&date_time));
+    _time = _time.substr(11, 8);
 }
 
 double Coordinates::get_latitude() {
@@ -38,5 +41,6 @@ string Coordinates::toString() {
         str += "S";
     else if(this->_cap == WEST)
         str += "W";
+    str += "/" + _time;
     return str;
 }

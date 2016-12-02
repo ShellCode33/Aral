@@ -3,6 +3,8 @@
 
 #include<string>
 #include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -19,6 +21,7 @@ private:
     double _latitude;
     double _longitude;
     Cap _cap;
+    string _time; // heure de l'envoi de la coordonnée
 
 public:
     Coordinates(double latitude, double longitude, Cap cap);

@@ -13,16 +13,24 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-    Clock timer = Clock();
+    if(argc < 2) {
+       cerr << "Usage ./beacon [boat_id]";
+       exit(EXIT_FAILURE);
+    }
+
+    string BOAT_ID = argv[1];
+
     DataSender* sender = new DataSender();
-    timer.set_alarm(Moment(0, 0, 1, 0, 0));
+
+    Clock timer = Clock();
+    timer.set_alarm(Moment(0, 0, 2, 0, 0));
     timer.start();
 
     while(1) {
         timer.check_time();
         if(timer.has_ticked()) {
             timer.reset();
-            sender->send_string(Coordinates().toString());
+            sender->send_string(BOAT_ID + "/" + Coordinates().toString());
         }
     }
 

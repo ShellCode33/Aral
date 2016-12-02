@@ -10,6 +10,7 @@ DataReceiver::DataReceiver()
     _data_recvd = "";
     _ssize = sizeof(_client_addr);
 
+    _coordinates = vector<Coordinates*>(50);
 
     _serv_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //création du socket
     if (_serv_sock < 0) {
