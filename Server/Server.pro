@@ -6,10 +6,10 @@ CONFIG -= qt
 QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
-    coordinates.cpp \
     datareceiver.cpp \
-    main.cpp
+    main.cpp \
+    ../coordinates.cpp
 
 HEADERS += \
-    coordinates.h \
-    datareceiver.h
+    datareceiver.h \
+    ../coordinates.h

@@ -6,13 +6,13 @@ CONFIG -= qt
 QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp \
-    coordinates.cpp \
     datasender.cpp \
     clock.cpp \
-    moment.cpp
+    moment.cpp \
+    ../coordinates.cpp
 
 HEADERS += \
     coordinates.h \
-    datasender.h \
     clock.h \
-    moment.h
+    moment.h \
+    ../coordinates.h

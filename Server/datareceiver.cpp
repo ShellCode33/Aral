@@ -4,13 +4,13 @@ DataReceiver::DataReceiver()
     : _serv_addr {0}, _client_addr {0}, _buffer {0}
 {
     _serv_addr.sin_family = AF_INET; //Domaine de communication (ipv4)
-    _serv_addr.sin_port = htons(PORT); //Définition du port de communication du serveur
+    _serv_addr.sin_port = htons(BEACON_PORT); //Définition du port de communication du serveur
     _serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);  //On accepte toutes les connexions de n'importe quelle adresse entrante
                                                     //htonl = host to network long
     _data_recvd = "";
     _ssize = sizeof(_client_addr);
 
-    _coordinates = vector<Coordinates*>(50);
+    _coordinates = vector<Coordinates*>(0);
 
     _serv_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //création du socket
     if (_serv_sock < 0) {
@@ -22,6 +22,15 @@ DataReceiver::DataReceiver()
     }
 
     cout << "bind ok" << endl;
+}
+
+DataReceiver::~DataReceiver() {
+    for(auto c : _coordinates)
+        delete c;
+}
+
+vector<Coordinates*> DataReceiver::get_stored_coordinates() const {
+    return _coordinates;
 }
 
 string DataReceiver::receive_string() {
@@ -37,7 +46,33 @@ string DataReceiver::receive_string() {
         _data_recvd = "";
     }
 
+    save_coordinate(_data_recvd);
+
     return _data_recvd;
+}
+
+void DataReceiver::save_coordinate(string coord) {
+    string id = coord.substr(0, coord.find_first_of("="));
+    double latitude = atof(coord.substr(coord.find_first_of("="), 9).c_str());
+    double longitude = atof(coord.substr(coord.find_first_of(","), 9).c_str());
+    Cap cap;
+    string capstr = coord.substr(coord.find_first_of(";"), 1);
+    if(capstr == "N")
+        cap = NORTH;
+    else if(capstr == "E")
+        cap = EAST;
+    else if(capstr == "S")
+        cap = SOUTH;
+    else
+        cap = WEST;
+    string time = coord.substr(coord.find_first_of("/"), 8);
+
+    // on ne stocke que COORDINATES_STORED coordonnées maximum
+    _coordinates.push_back(new Coordinates(latitude, longitude, cap, time, id));
+    if(_coordinates.size() > COORDINATES_STORED)
+        _coordinates.erase(_coordinates.cbegin());
+
+    cout << "size: " << _coordinates.size() << endl;
 }
 
 void DataReceiver::close_socket() {

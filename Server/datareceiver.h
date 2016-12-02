@@ -10,10 +10,12 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
-#include <coordinates.h>
+#include <../coordinates.h>
 
-#define PORT 25600
+#define BEACON_PORT 25600
+#define CLIENT_PORT 25700
 #define BUFFER_SIZE 4096
+#define COORDINATES_STORED 100
 
 using namespace std;
 
@@ -31,8 +33,12 @@ private:
 
 public:
     DataReceiver();
+    ~DataReceiver();
+
+    vector<Coordinates*> get_stored_coordinates() const;
 
     string receive_string();
+    void save_coordinate(string coord);
 
     void close_socket();
 };

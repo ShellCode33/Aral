@@ -1,7 +1,7 @@
 #include "coordinates.h"
 
-Coordinates::Coordinates(double latitude, double longitude, Cap cap)
-    : _latitude{latitude}, _longitude{longitude}, _cap{cap}, _time {}
+Coordinates::Coordinates(double latitude, double longitude, Cap cap, string timee, string id)
+    : _latitude{latitude}, _longitude{longitude}, _cap{cap}, _time {}, _owner_id{id}
 {
     srand(time(NULL));
 }

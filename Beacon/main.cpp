@@ -6,7 +6,7 @@
 #include <unistd.h> /* close */
 
 #include "datasender.h"
-#include "coordinates.h"
+#include "../coordinates.h"
 #include "clock.h"
 
 using namespace std;
@@ -23,14 +23,14 @@ int main(int argc, char **argv) {
     DataSender* sender = new DataSender();
 
     Clock timer = Clock();
-    timer.set_alarm(Moment(0, 0, 2, 0, 0));
+    timer.set_alarm(Moment(0, 0, 0, 500, 0));
     timer.start();
 
     while(1) {
         timer.check_time();
         if(timer.has_ticked()) {
             timer.reset();
-            sender->send_string(BOAT_ID + "/" + Coordinates().toString());
+            sender->send_string(BOAT_ID + "=" + Coordinates().toString());
         }
     }
 
