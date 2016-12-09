@@ -9,9 +9,13 @@ SOURCES += \
     datareceiver.cpp \
     main.cpp \
     ../coordinates.cpp \
-    clienthandler.cpp
+    clienthandler.cpp \
+    requesthandler.cpp \
+    coordinatebuffer.cpp
 
 HEADERS += \
     datareceiver.h \
-../coordinates.h \
-    clienthandler.h
+    clienthandler.h \
+    requesthandler.h \
+    coordinatebuffer.h \
+    ../coordinates.h

@@ -10,8 +10,6 @@ DataReceiver::DataReceiver()
     _data_recvd = "";
     _ssize = sizeof(_client_addr);
 
-    _coordinates = vector<Coordinates*>(0);
-
     _serv_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); //création du socket
     if (_serv_sock < 0) {
         cerr << "Can't create socket" << endl;
@@ -22,15 +20,6 @@ DataReceiver::DataReceiver()
     }
 
     cout << "bind ok" << endl;
-}
-
-DataReceiver::~DataReceiver() {
-    for(auto c : _coordinates)
-        delete c;
-}
-
-vector<Coordinates*> DataReceiver::get_stored_coordinates() const {
-    return _coordinates;
 }
 
 string DataReceiver::receive_string() {
@@ -68,11 +57,7 @@ void DataReceiver::save_coordinate(string coord) {
     string time = coord.substr(coord.find_first_of("/"), 8);
 
     // on ne stocke que COORDINATES_STORED coordonnées maximum
-    _coordinates.push_back(new Coordinates(latitude, longitude, cap, time, id));
-    if(_coordinates.size() > COORDINATES_STORED)
-        _coordinates.erase(_coordinates.cbegin());
-
-    cout << "size: " << _coordinates.size() << endl;
+    CoordinateBuffer::save_coordinates(new Coordinates(latitude, longitude, cap, time, id));
 }
 
 void DataReceiver::close_socket() {

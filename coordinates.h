@@ -28,9 +28,10 @@ public:
     Coordinates(double latitude, double longitude, Cap cap, string timee, string id);
     Coordinates(); // renvoie une coordonnée random -- utiles pour les tests
 
-    double get_latitude();
-    double get_longitude();
-    Cap get_cap();
+    double get_latitude() const;
+    double get_longitude() const;
+    Cap get_cap() const;
+    unsigned int get_owner_id() const;
 
     string toString();
 };

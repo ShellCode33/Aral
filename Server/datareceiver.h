@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <vector>
 #include <../coordinates.h>
+#include <coordinatebuffer.h>
 
 #define BEACON_PORT 25600
 #define BUFFER_SIZE 4096
@@ -27,13 +28,8 @@ private:
     string _data_recvd;
     socklen_t _ssize;
 
-    vector<Coordinates*> _coordinates; // stocke les coordonnées reçues
-
 public:
     DataReceiver();
-    ~DataReceiver();
-
-    vector<Coordinates*> get_stored_coordinates() const;
 
     string receive_string();
     void save_coordinate(string coord);

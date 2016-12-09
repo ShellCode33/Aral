@@ -18,16 +18,20 @@ Coordinates::Coordinates()
     _time = _time.substr(11, 8);
 }
 
-double Coordinates::get_latitude() {
+double Coordinates::get_latitude() const {
     return this->_latitude;
 }
 
-double Coordinates::get_longitude() {
+double Coordinates::get_longitude() const{
     return this->_longitude;
 }
 
-Cap Coordinates::get_cap() {
+Cap Coordinates::get_cap() const{
     return this->_cap;
+}
+
+unsigned int Coordinates::get_owner_id() const {
+    return stoi(this->_owner_id);
 }
 
 string Coordinates::toString() {
