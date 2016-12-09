@@ -14,3 +14,4 @@ SOURCES += \
 HEADERS += \
     datareceiver.h \
 ../coordinates.h \
+    clienthandler.h

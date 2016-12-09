@@ -8,7 +8,8 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#define PORT 9476
+#define SEND_PORT 9477
+#define RECV_PORT 9476
 #define BUFFER_SIZE 1024
 
 using namespace std;
@@ -30,7 +31,13 @@ private:
 public:
     ClientHandler();
 
-    void receive_message();
+    void init_send_socket();
+    void init_receive_socket();
+
+    void receive_request();
+    void send_data(string data);
+
+    void close_sockets();
 };
 
 #endif // CLIENTHANDLER_H

@@ -27,7 +27,22 @@ int main(int argc, char **argv) {
 
     ClientHandler handler = ClientHandler();
 
-    handler.receive_message();
+    handler.init_receive_socket();
+    handler.receive_request();
+    handler.close_sockets();
+
+    handler.init_send_socket();
+    handler.send_data("Premier envoi!");
+    handler.send_data("Deuxième envoi!");
+    handler.close_sockets();
+
+    // Il faut attendre quelques secondes avant de rebind le socket, sinon crash
+    for(int i = 0 ; i < 1000000000 ; i++)
+        i = i;
+
+    handler.init_send_socket();
+    handler.send_data("Troisième envoi!");
+    handler.close_sockets();
 
     return 0;
 }
