@@ -1,7 +1,7 @@
 #ifndef COORDINATES_H
 #define COORDINATES_H
 
-#include<string>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

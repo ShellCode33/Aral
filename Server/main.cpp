@@ -6,11 +6,13 @@
 #include <iostream>
 
 #include "datareceiver.h"
+#include "clienthandler.h"
 
 using namespace std;
 
 int main(int argc, char **argv) {
 
+    /*
     DataReceiver receiver = DataReceiver();
     string received = "";
 
@@ -21,4 +23,11 @@ int main(int argc, char **argv) {
     }
 
     receiver.close_socket();
+    */
+
+    ClientHandler handler = ClientHandler();
+
+    handler.receive_message();
+
+    return 0;
 }

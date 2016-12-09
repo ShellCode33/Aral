@@ -8,7 +8,7 @@ Coordinates::Coordinates(double latitude, double longitude, Cap cap, string time
 
 Coordinates::Coordinates()
 {
-    time_t date_time = time(nullptr);
+    time_t date_time = time(0);
     _latitude = rand() % 181; // 0 -- 180
     (rand() % 2 == 0 ? _latitude *= -1 : _latitude);
     _longitude = rand() % 181; // 0 -- 180
@@ -31,8 +31,8 @@ Cap Coordinates::get_cap() {
 }
 
 string Coordinates::toString() {
-    string str =  std::to_string(_latitude) + ","
-            + std::to_string(_longitude) + ";";
+    string str =  to_string(_latitude) + ","
+            + to_string(_longitude) + ";";
     if(this->_cap == NORTH)
         str += "N";
     else if(this->_cap == EAST)

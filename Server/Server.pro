@@ -8,8 +8,10 @@ QMAKE_CXXFLAGS += -std=c++11
 SOURCES += \
     datareceiver.cpp \
     main.cpp \
-    ../coordinates.cpp
+    ../coordinates.cpp \
+    clienthandler.cpp
 
 HEADERS += \
     datareceiver.h \
-    ../coordinates.h
+    ../coordinates.h \
+    clienthandler.h

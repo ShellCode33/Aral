@@ -13,7 +13,6 @@
 #include <../coordinates.h>
 
 #define BEACON_PORT 25600
-#define CLIENT_PORT 25700
 #define BUFFER_SIZE 4096
 #define COORDINATES_STORED 100
 

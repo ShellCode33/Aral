@@ -1,9 +1,13 @@
 #include <iostream>
+#include "serverhandler.h"
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int main()
 {
-    cout << "Hello World!" << endl;
+    ServerHandler handler = ServerHandler();
+
+    handler.send_message("Coucou serveur!");
+
     return 0;
 }
