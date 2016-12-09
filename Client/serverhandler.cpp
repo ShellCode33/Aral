@@ -29,13 +29,13 @@ ServerHandler::ServerHandler()
 
 void ServerHandler::send_message(string msg) {
     //Envoie des données
-    if(send(_send_sock, _send_buffer, BUFFER_SIZE, 0) < 0)
+    if(send(_send_sock, msg.c_str(), BUFFER_SIZE, 0) < 0)
     {
         cerr << "send failed";
         exit(EXIT_FAILURE);
     }
     else{
-        std::cout << "Send : " << _send_buffer << std::endl;
+        std::cout << "Send : " << msg << std::endl;
     }
 
     memset(_send_buffer, 0, BUFFER_SIZE);
