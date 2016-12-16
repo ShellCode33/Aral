@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <cstring>
 #include <clienthandler.h>
+#include <coordinatebuffer.h>
+#include <../coordinates.h>
 
 using namespace std;
 
@@ -16,7 +18,7 @@ private:
     ClientHandler* _client;
 
 public:
-    RequestHandler(string request, ClientHandler* client);
+    RequestHandler(string request, ClientHandler &client);
     ~RequestHandler();
 
     vector<string>* split_request(string request);

@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#define SEND_PORT 9476
+#define SEND_PORT 9470
 #define RECV_PORT 9477
 #define BUFFER_SIZE 1024
 
@@ -33,7 +33,7 @@ public:
     void init_send_socket();
 
     void send_request(string msg);
-    void receive_data();
+    string receive_data();
 
     void close_sockets();
 };

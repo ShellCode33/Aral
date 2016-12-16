@@ -36,7 +36,6 @@ string DataReceiver::receive_string() {
     }
 
     save_coordinate(_data_recvd);
-
     return _data_recvd;
 }
 

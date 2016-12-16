@@ -12,7 +12,7 @@
 #include <../coordinates.h>
 #include <coordinatebuffer.h>
 
-#define BEACON_PORT 25600
+#define BEACON_PORT 25700
 #define BUFFER_SIZE 4096
 #define COORDINATES_STORED 100
 

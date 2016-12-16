@@ -73,12 +73,14 @@ void ServerHandler::send_request(string msg) {
     memset(_send_buffer, 0, BUFFER_SIZE);
 }
 
-void ServerHandler::receive_data() {
+string ServerHandler::receive_data() {
     while(recv(_serv_sock, _recv_buffer, BUFFER_SIZE, 0) != 0)
     {
-        cout << "Received : "<< _recv_buffer << endl;
+        string str = _recv_buffer;
         memset(_recv_buffer, 0, BUFFER_SIZE);
+        return str;
     }
+    return nullptr;
 }
 
 void ServerHandler::close_sockets() {

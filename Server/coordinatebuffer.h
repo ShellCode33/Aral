@@ -18,9 +18,11 @@ public:
     CoordinateBuffer();
     ~CoordinateBuffer();
 
-    static vector<Coordinates *> get_boat_coordinates(unsigned int boat_id);
+    static vector<Coordinates *> get_all_coordinates_of(unsigned int boat_id);
+    static Coordinates* get_last_coordinate_of(unsigned int boat_id);
 
     static void save_coordinates(Coordinates *coord);
+    static void clear_coordinates();
 
 };
 

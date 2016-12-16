@@ -15,4 +15,5 @@ HEADERS += \
     coordinates.h \
     clock.h \
     moment.h \
-    ../coordinates.h
+    ../coordinates.h \
+    datasender.h

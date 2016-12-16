@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h> /* close */
 
-#define PORT 25600
+#define PORT 25700
 #define SERV_ADDR "127.0.0.1"
 
 using namespace std;

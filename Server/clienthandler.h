@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define SEND_PORT 9477
-#define RECV_PORT 9476
+#define RECV_PORT 9470
 #define BUFFER_SIZE 1024
 
 using namespace std;
@@ -34,7 +34,7 @@ public:
     void init_send_socket();
     void init_receive_socket();
 
-    void receive_request();
+    string receive_request();
     void send_data(string data);
 
     void close_sockets();

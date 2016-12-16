@@ -61,13 +61,17 @@ void ClientHandler::init_receive_socket() {
     //-----------------------------------------------------------------------
 }
 
-void ClientHandler::receive_request() {
+string ClientHandler::receive_request() {
+    string str;
     //On lit ce qu'on reçoit depuis le client
     while(recv(_client_sock, _recv_buffer, BUFFER_SIZE, 0) != 0)
     {
         std::cout << "Received : "<< _recv_buffer << std::endl;
+        str = _recv_buffer;
         memset(_recv_buffer, 0, BUFFER_SIZE);
+        return str;
     }
+    return nullptr;
 }
 
 void ClientHandler::send_data(string data) {
@@ -79,6 +83,7 @@ void ClientHandler::send_data(string data) {
     else{
         std::cout << "Send : " << data << std::endl;
     }
+    send(_send_sock, ":END:", BUFFER_SIZE, 0);
 }
 
 void ClientHandler::close_sockets() {
