@@ -16,8 +16,6 @@
 #define BUFFER_SIZE 4096
 #define COORDINATES_STORED 100
 
-using namespace std;
-
 class DataReceiver {
 
 private:
@@ -25,14 +23,14 @@ private:
     struct sockaddr_in _client_addr;
     int _serv_sock;
     char _buffer[BUFFER_SIZE];
-    string _data_recvd;
+    std::string _data_recvd;
     socklen_t _ssize;
 
 public:
     DataReceiver();
 
-    string receive_string();
-    void save_coordinate(string coord);
+    std::string receive_string();
+    void save_coordinate(std::string coord);
 
     void close_socket();
 };

@@ -6,13 +6,11 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <string.h>
+#include <string>
 
 #define SEND_PORT 9477
 #define RECV_PORT 9470
 #define BUFFER_SIZE 1024
-
-using namespace std;
 
 class ClientHandler
 {
@@ -34,8 +32,8 @@ public:
     void init_send_socket();
     void init_receive_socket();
 
-    string receive_request();
-    void send_data(string data);
+    std::string receive_request();
+    void send_data(std::string data);
 
     void close_sockets();
 };
