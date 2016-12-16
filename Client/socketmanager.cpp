@@ -1,4 +1,4 @@
-#include "serverhandler.h"
+#include "socketmanager.h"
 
 SocketManager::SocketManager()
     :_send_sock {0}, _send_buffer {0}, _recv_sock {0}, _serv_sock {0}, _recv_buffer {0}

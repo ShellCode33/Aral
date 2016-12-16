@@ -15,9 +15,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    serverhandler.cpp
+    socketmanager.cpp
 
 HEADERS  += mainwindow.h \
-    serverhandler.h
+    ../packet.h \
+    socketmanager.h
 
 FORMS    += mainwindow.ui
