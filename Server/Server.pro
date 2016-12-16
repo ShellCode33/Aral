@@ -7,16 +7,16 @@ QMAKE_CXXFLAGS += -std=c++11 -pthread
 LIBS += -lpthread
 
 SOURCES += \
-    datareceiver.cpp \
     main.cpp \
-    ../coordinates.cpp \
-    clienthandler.cpp \
-    requesthandler.cpp \
-    coordinatebuffer.cpp
+    ../Common/boat.cpp \
+    client.cpp \
+    socketmanager.cpp \
+    udpreceiver.cpp
 
 HEADERS += \
-    datareceiver.h \
-    clienthandler.h \
-    requesthandler.h \
-    coordinatebuffer.h \
-    ../coordinates.h
+    ../coordinates.h \
+    ../Common/boat.h \
+    ../Common/packet.h \
+    client.h \
+    socketmanager.h \
+    udpreceiver.h

@@ -7,33 +7,27 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include "../Common/packet.h"
 
-#define PORT 9470
+#define PORT 1337
 #define BUFFER_SIZE 1024
 
 using namespace std;
 
 class SocketManager {
 private:
-    // partie envoie de requêtes
-    int _send_sock;
+    int _sock;
     struct sockaddr_in _server;
-    char _send_buffer[BUFFER_SIZE];
-
-    // partie réception de données
-    int _recv_sock, _serv_sock;
-    struct sockaddr_in _recv_addr, _serv_addr;
     char _recv_buffer[BUFFER_SIZE];
 
 public:
     SocketManager();
+    ~SocketManager();
 
-    void init_receive_socket();
-    void init_socket();
-
-    void sendMessage(string msg);
-    string receive_data();
-
+    void init();
+    void send_packet(Packet packet);
+    void send_string(string msg);
+    string receive_string();
     void close_sockets();
 };
 

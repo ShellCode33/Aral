@@ -15,10 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    socketmanager.cpp
+    socketmanager.cpp \
+    ../Common/boat.cpp
 
 HEADERS  += mainwindow.h \
-    ../packet.h \
-    socketmanager.h
+    ../Common/packet.h \
+    socketmanager.h \
+    ../Common/boat.h
 
 FORMS    += mainwindow.ui

@@ -7,6 +7,9 @@
 #include <QStringListModel>
 #include <QAbstractItemView>
 
+#include "socketmanager.h"
+#include "../Common/boat.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -23,6 +26,8 @@ private:
     Ui::MainWindow *_ui;
     QWebEngineView *_webView;
     QStringListModel *_listModel;
+    SocketManager _socketManager;
+    std::vector<Boat> _boats;
 };
 
 #endif // MAINWINDOW_H

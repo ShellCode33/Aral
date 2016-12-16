@@ -1,25 +1,24 @@
 #include "socketmanager.h"
 
 SocketManager::SocketManager()
-    :_send_sock {0}, _send_buffer {0}, _recv_sock {0}, _serv_sock {0}, _recv_buffer {0}
 {
+    memset(_recv_buffer, 0, BUFFER_SIZE);
 }
 
-void SocketManager::init_socket() {
+void SocketManager::init() {
 
-    // SEND SOCKET -----------------------------------------------------------
-    if((_send_sock = socket(AF_INET , SOCK_STREAM, 0)) == -1) {
+    if((_sock = socket(AF_INET , SOCK_STREAM, 0)) == -1) {
         cerr << "Could not create socket";
         exit(EXIT_FAILURE);
     }
 
     //Définition de la connexions : adresse du serveur, port, ipv4 ...
     _server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    _server.sin_family = AF_INET;
     _server.sin_port = PORT;
+    _server.sin_family = AF_INET;
 
     //Connexion
-    if(connect(_send_sock, (struct sockaddr *)&_server , sizeof(_server)) < 0) {
+    if(connect(_sock, (struct sockaddr *)&_server , sizeof(_server)) < 0) {
         cerr << "connect failed";
         exit(EXIT_FAILURE);
     }
@@ -27,39 +26,77 @@ void SocketManager::init_socket() {
     // -----------------------------------------------------------------------
 }
 
-void SocketManager::sendMessage(string msg)
+void SocketManager::send_packet(Packet packet)
 {
-    //Envoie des données
-    if(send(_send_sock, msg.c_str(), BUFFER_SIZE, 0) < 0)
+    if(send(_sock, &packet, sizeof(packet), 0) < 0)
+    {
+        cerr << "send failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+}
+
+void SocketManager::send_string(string msg)
+{
+    size_t len = msg.length();
+
+    //On envoie la taille de la chaine de carac
+    if(send(_sock, &len, sizeof(len), 0) < 0)
     {
         cerr << "send failed";
         exit(EXIT_FAILURE);
     }
 
-    else
+    //Envoie la chaine de carac
+    if(send(_sock, msg.c_str(), msg.length(), 0) < 0)
     {
-        std::cout << "Send : " << msg << std::endl;
+        cerr << "send failed";
+        exit(EXIT_FAILURE);
     }
-
-    memset(_send_buffer, 0, BUFFER_SIZE);
 }
 
-string SocketManager::receive_data()
+string SocketManager::receive_string()
 {
-    while(recv(_serv_sock, _recv_buffer, BUFFER_SIZE, 0) != 0)
+    size_t str_len = 0;
+    size_t bytes_received = 0;
+
+    //On recoit la taille de la chaine que l'on va devoir récupérer
+    while(bytes_received < sizeof(str_len))
     {
-        string str = _recv_buffer;
-        memset(_recv_buffer, 0, BUFFER_SIZE);
-        return str;
+        int received = recv(_sock, &str_len+bytes_received, sizeof(str_len)-bytes_received, 0);
+
+        if(received == 0)
+        {
+            cerr << "Error while receiving size of string" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        bytes_received += received;
     }
-    return nullptr;
+
+    bytes_received = 0;
+
+    char *buffer = new char[str_len];
+
+    //On récupère la chaine
+    while(bytes_received < str_len)
+    {
+        int received = recv(_sock, buffer+bytes_received, str_len-bytes_received, 0);
+
+        if(received == 0)
+        {
+            cerr << "Error while receiving string" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        bytes_received += received;
+    }
+
+    return string(buffer);
 }
 
-void SocketManager::close_sockets()
+SocketManager::~SocketManager()
 {
-    close(_recv_sock);
-    close(_send_sock);
-    close(_serv_sock);
+    close(_sock);
 }
 
 

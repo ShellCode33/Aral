@@ -1,34 +1,11 @@
 #include "clienthandler.h"
 
-ClientHandler::ClientHandler()
+SocketManager::SocketManager()
     :_send_sock {0}, _send_buffer {0}, _recv_sock {0}, _client_sock {0}, _recv_buffer {0}
 {
 }
 
-void ClientHandler::init_send_socket() {
-
-    //SEND SOCKET-------------------------------------------------------------
-
-    if((_send_sock = socket(AF_INET , SOCK_STREAM, 0)) == -1) {
-        cerr << "Could not create socket";
-        exit(EXIT_FAILURE);
-    }
-
-    //Définition de la connexions : adresse du serveur, port, ipv4 ...
-    _client.sin_addr.s_addr = inet_addr("127.0.0.1");
-    _client.sin_family = AF_INET;
-    _client.sin_port = SEND_PORT;
-
-    //Connexion
-    if(connect(_send_sock, (struct sockaddr *)&_client , sizeof(_client)) < 0) {
-        cerr << "connect failed";
-        exit(EXIT_FAILURE);
-    }
-
-    //-----------------------------------------------------------------------
-}
-
-void ClientHandler::init_receive_socket() {
+void SocketManager::init() {
     // RECV SOCKET-----------------------------------------------------------
 
     //Création du socket server
@@ -49,7 +26,7 @@ void ClientHandler::init_receive_socket() {
     }
 
     //La socket server va écouter les connexions
-    listen(_recv_sock, 1);
+    listen(_recv_sock, 1000);
 
     //On crée la socket associé au client
     int c = sizeof(struct sockaddr_in);
@@ -61,7 +38,9 @@ void ClientHandler::init_receive_socket() {
     //-----------------------------------------------------------------------
 }
 
-string ClientHandler::receive_request() {
+
+
+string SocketManager::receive_request() {
     string str;
     //On lit ce qu'on reçoit depuis le client
     while(recv(_client_sock, _recv_buffer, BUFFER_SIZE, 0) != 0)
@@ -74,7 +53,7 @@ string ClientHandler::receive_request() {
     return nullptr;
 }
 
-void ClientHandler::send_data(string data) {
+void SocketManager::send_data(string data) {
     if(send(_send_sock, data.c_str(), BUFFER_SIZE, 0) < 0)
     {
         std::cout << "send failed" << std::endl;
@@ -86,7 +65,7 @@ void ClientHandler::send_data(string data) {
     send(_send_sock, ":END:", BUFFER_SIZE, 0);
 }
 
-void ClientHandler::close_sockets() {
+void SocketManager::close_sockets() {
     close(_send_sock);
     close(_recv_sock);
     close(_client_sock);

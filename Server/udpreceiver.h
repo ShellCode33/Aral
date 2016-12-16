@@ -7,16 +7,16 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string>
+#include <cstring>
 #include <unistd.h>
 #include <vector>
-#include <../coordinates.h>
-#include <coordinatebuffer.h>
+
+#include "client.h"
 
 #define BEACON_PORT 25700
-#define BUFFER_SIZE 4096
 #define COORDINATES_STORED 100
 
-class DataReceiver {
+class UdpReceiver {
 
 private:
     struct sockaddr_in _serv_addr;
@@ -27,7 +27,7 @@ private:
     socklen_t _ssize;
 
 public:
-    DataReceiver();
+    UdpReceiver();
 
     std::string receive_string();
     void save_coordinate(std::string coord);

@@ -1,8 +1,11 @@
-#include "datareceiver.h"
+#include "udpreceiver.h"
 
-DataReceiver::DataReceiver()
-    : _serv_addr {0}, _client_addr {0}, _buffer {0}
+using namespace std;
+
+UdpReceiver::UdpReceiver()
 {
+    memset(_buffer, 0, BUFFER_SIZE);
+
     _serv_addr.sin_family = AF_INET; //Domaine de communication (ipv4)
     _serv_addr.sin_port = htons(BEACON_PORT); //Définition du port de communication du serveur
     _serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);  //On accepte toutes les connexions de n'importe quelle adresse entrante
@@ -22,7 +25,7 @@ DataReceiver::DataReceiver()
     cout << "bind ok" << endl;
 }
 
-string DataReceiver::receive_string() {
+string UdpReceiver::receive_string() {
     int bytes_received = recvfrom(_serv_sock, _buffer, BUFFER_SIZE-1, 0, (struct sockaddr*)&_client_addr, &_ssize); //On essaye de lire BUFFER_SIZE octets sur le socket
 
     if(bytes_received > 0) {
@@ -39,7 +42,7 @@ string DataReceiver::receive_string() {
     return _data_recvd;
 }
 
-void DataReceiver::save_coordinate(string coord) {
+void UdpReceiver::save_coordinate(string coord) {
     string id = coord.substr(0, coord.find_first_of("="));
     double latitude = atof(coord.substr(coord.find_first_of("="), 9).c_str());
     double longitude = atof(coord.substr(coord.find_first_of(","), 9).c_str());
@@ -56,9 +59,9 @@ void DataReceiver::save_coordinate(string coord) {
     string time = coord.substr(coord.find_first_of("/"), 8);
 
     // on ne stocke que COORDINATES_STORED coordonnées maximum
-    CoordinateBuffer::save_coordinates(new Coordinates(latitude, longitude, cap, time, id));
+    //CoordinateBuffer::save_coordinates(new Coordinates(latitude, longitude, cap, time, id));
 }
 
-void DataReceiver::close_socket() {
+void UdpReceiver::close_socket() {
     close(_serv_sock);
 }

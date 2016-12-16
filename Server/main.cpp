@@ -6,17 +6,18 @@
 #include <iostream>
 #include <thread>
 
-#include "datareceiver.h"
-#include "clienthandler.h"
-#include "requesthandler.h"
+#include "udpreceiver.h"
+#include "socketmanager.h"
+#include "client.h"
 
 using namespace std;
 
-void catch_beacon_data() {
-    DataReceiver receiver = DataReceiver();
+void catch_beacon_data(vector<Boat> * boats) {
+    UdpReceiver receiver = UdpReceiver();
     string received = "";
 
-    while(1) {
+    while(true)
+    {
         received = receiver.receive_string();
         cout << "Received: " << received << endl;
     }
@@ -24,33 +25,32 @@ void catch_beacon_data() {
     receiver.close_socket();
 }
 
-void treat_client_requests() {
-    ClientHandler handler = ClientHandler();
-    RequestHandler* rqhandler;
+void process_clients(vector<Boat> * boats) {
 
-    while(1) {
-        sleep(1);
-        handler.init_receive_socket();
-        rqhandler = new RequestHandler(handler.receive_request(), handler);
+    SocketManager socketManager;
+    vector<Client*> clients;
+
+    while(true) //On gère la connexion d'un client indéfiniement
+    {
+        Client *client = socketManager.wait_new_client();
+        clients.push_back(client);
+        client->manage(boats);
     }
 
-    delete rqhandler;
-    handler.close_sockets();
+    for(Client* client : clients)
+        delete client;
+
+    clients.clear();
 }
 
 int main() {
 
-    thread* beacon_th;
-    thread* client_th;
+    vector<Boat> boats;
+    thread beacon_th(catch_beacon_data, &boats);
+    thread client_th(process_clients, &boats);
 
-    beacon_th = new thread(catch_beacon_data);
-    client_th = new thread(treat_client_requests);
-
-    beacon_th->join();
-    client_th->join();
-
-    delete beacon_th;
-    delete client_th;
+    beacon_th.join();
+    client_th.join();
 
     return 0;
 }
