@@ -8,13 +8,12 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#define SEND_PORT 9470
-#define RECV_PORT 9477
+#define PORT 9470
 #define BUFFER_SIZE 1024
 
 using namespace std;
 
-class ServerHandler {
+class SocketManager {
 private:
     // partie envoie de requêtes
     int _send_sock;
@@ -27,12 +26,12 @@ private:
     char _recv_buffer[BUFFER_SIZE];
 
 public:
-    ServerHandler();
+    SocketManager();
 
     void init_receive_socket();
-    void init_send_socket();
+    void init_socket();
 
-    void send_request(string msg);
+    void sendMessage(string msg);
     string receive_data();
 
     void close_sockets();

@@ -1,14 +1,23 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2016-12-16T13:08:34
+#
+#-------------------------------------------------
+
+QT       += core gui
+QT       += webengine
+QT       += webenginewidgets
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = AralGUI
 TEMPLATE = app
-CONFIG += console c++11
-CONFIG -= app_bundle
-CONFIG -= qt
 
-QMAKE_CXXFLAGS += -std=c++11
-
-SOURCES += main.cpp \
-    ../coordinates.cpp \
+SOURCES += main.cpp\
+        mainwindow.cpp \
     serverhandler.cpp
 
-HEADERS += \
-    ../coordinates.h \
+HEADERS  += mainwindow.h \
     serverhandler.h
+
+FORMS    += mainwindow.ui
