@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Boat::Boat(string name) : _name(name)
+Boat::Boat(string name) : _name(name), _current_cap(NORTH)
 {
 
 }
@@ -31,5 +31,15 @@ double Boat::getLongitude() const
 
 string Boat::toString() const
 {
-    return _name + ":" + to_string(getLongitude()) + ":" + to_string(getLatitude()) + ":" + to_string(_current_cap) + ":" + "4h20";
+    string boat_string;
+    boat_string.append(_name);
+    boat_string.append(":");
+    boat_string.append(to_string(getLongitude()));
+    boat_string.append(":");
+    boat_string.append(to_string(getLatitude()));
+    boat_string.append(":");
+    boat_string.append(to_string(_current_cap));
+    boat_string.append(":");
+    boat_string.append("4h20");
+    return boat_string;
 }

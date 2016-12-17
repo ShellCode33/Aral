@@ -18,17 +18,16 @@ class SocketManager {
 private:
     int _sock;
     struct sockaddr_in _server;
-    char _recv_buffer[BUFFER_SIZE];
 
 public:
     SocketManager();
     ~SocketManager();
 
-    void init();
     void send_packet(Packet packet);
     void send_string(string msg);
     string receive_string();
     void close_sockets();
+    int receive_integer();
 };
 
 #endif // SERVERHANDLER_H

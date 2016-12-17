@@ -2,11 +2,6 @@
 
 SocketManager::SocketManager()
 {
-    memset(_recv_buffer, 0, BUFFER_SIZE);
-}
-
-void SocketManager::init() {
-
     if((_sock = socket(AF_INET , SOCK_STREAM, 0)) == -1) {
         cerr << "Could not create socket";
         exit(EXIT_FAILURE);
@@ -14,23 +9,23 @@ void SocketManager::init() {
 
     //Définition de la connexions : adresse du serveur, port, ipv4 ...
     _server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    _server.sin_port = PORT;
+    _server.sin_port = htons(PORT);
     _server.sin_family = AF_INET;
 
     //Connexion
     if(connect(_sock, (struct sockaddr *)&_server , sizeof(_server)) < 0) {
-        cerr << "connect failed";
+        cerr << "connect failed on PORT : " << PORT << endl;
         exit(EXIT_FAILURE);
     }
 
-    // -----------------------------------------------------------------------
+    cout << "Connected to the server !" << endl;
 }
 
 void SocketManager::send_packet(Packet packet)
 {
     if(send(_sock, &packet, sizeof(packet), 0) < 0)
     {
-        cerr << "send failed" << endl;
+        cerr << "send failed, errno : " << errno << endl;
         exit(EXIT_FAILURE);
     }
 }
@@ -54,6 +49,28 @@ void SocketManager::send_string(string msg)
     }
 }
 
+int SocketManager::receive_integer()
+{
+    int value;
+    size_t bytes_received = 0;
+
+    while(bytes_received < sizeof(int))
+    {
+        int received = recv(_sock, &value+bytes_received, sizeof(int)-bytes_received, 0);
+
+        if(received == 0)
+        {
+            cerr << "Error while receiving size of string" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        bytes_received += received;
+    }
+
+
+    return value;
+}
+
 string SocketManager::receive_string()
 {
     size_t str_len = 0;
@@ -75,7 +92,8 @@ string SocketManager::receive_string()
 
     bytes_received = 0;
 
-    char *buffer = new char[str_len];
+    char *buffer = new char[str_len+1];
+    memset(buffer, 0, str_len+1);
 
     //On récupère la chaine
     while(bytes_received < str_len)

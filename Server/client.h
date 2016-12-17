@@ -6,21 +6,23 @@
 #include <vector>
 #include "../Common/packet.h"
 #include "../Common/boat.h"
-#include "socketmanager.h"
+#include "clientshandler.h"
 
 class Client
 {
 public:
-    Client(int sock, sockaddr_in addr, SocketManager socketManager);
-    void manage(std::vector<Boat> *boats);
+    Client(int sock, sockaddr_in addr, ClientsHandler &clients_handler);
+    void manage();
     int getSocket();
     struct sockaddr_in getAddr();
 
 private:
+    static int _current_id;
+    int _client_id;
     int _sock;
     sockaddr_in _addr;
-    SocketManager _socketManager;
-    void t_process_requests(std::vector<Boat> *boats);
+    ClientsHandler & _clients_handler;
+    void process_requests();
 };
 
 #endif // CLIENT_H

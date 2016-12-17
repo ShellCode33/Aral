@@ -1,52 +1,33 @@
-#include "socketmanager.h"
+#include "clientshandler.h"
 #include "client.h"
 
 using namespace std;
 
-SocketManager::SocketManager()
+ClientsHandler::ClientsHandler() : Server(TCP)
 {
+
 }
 
-void SocketManager::init() {
-    // RECV SOCKET-----------------------------------------------------------
-
-    //Création du socket server
-    if((_serv_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1){
-        cerr << "socket error";
-        exit(EXIT_FAILURE);
-    }
-
-    //Définition des informations du socket ipv4, on accepte toutes les adresses, on définit le port
-    _serv_addr.sin_family = AF_INET;
-    _serv_addr.sin_addr.s_addr = INADDR_ANY;
-    _serv_addr.sin_port = PORT;
-
-    //On bind la socket avec la structure contenant les informations
-    if(bind(_serv_sock, (struct sockaddr*)&_serv_addr, sizeof(_serv_sock)) < 0){
-        cerr << "bind error, use another port" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    //La socket server va écouter les connexions
-    listen(_serv_sock, 1000);
-}
-
-Client* SocketManager::wait_new_client()
+Client* ClientsHandler::wait_new_client()
 {
+    cout << "Waiting a new client..." << endl;
+
     int client_sock;
     struct sockaddr_in client_addr;
 
     //On crée la socket associé au client
-    int c = sizeof(struct sockaddr_in);
-    if((client_sock = accept(_serv_sock, (struct sockaddr *)&client_addr, (socklen_t*)&c)) < 0){
-        cerr << "accept error, tell admin";
+    socklen_t c = sizeof(struct sockaddr_in);
+    if((client_sock = accept(_serv_sock, (struct sockaddr *)&client_addr, &c)) < 0){
+        cerr << "accept error" << endl;
         exit(EXIT_FAILURE);
     }
+
+    cout << "A new client is connected !" << endl;
 
     return new Client(client_sock, client_addr, *this);
 }
 
-Packet SocketManager::receive_packet_from(Client *client)
+Packet ClientsHandler::receive_packet_from(Client *client)
 {
     Packet packet;
     size_t bytes_received = 0;
@@ -67,7 +48,19 @@ Packet SocketManager::receive_packet_from(Client *client)
     return packet;
 }
 
-int SocketManager::receive_integer_from(Client *client)
+void ClientsHandler::start()
+{
+    cout << "ClientsHandler looping..." << endl;
+
+    while(true) //On gère la connexion d'un client indéfiniement
+    {
+        Client *client = wait_new_client();
+        _clients.push_back(client);
+        client->manage();
+    }
+}
+
+int ClientsHandler::receive_integer_from(Client *client)
 {
     int i;
     size_t bytes_received = 0;
@@ -84,9 +77,11 @@ int SocketManager::receive_integer_from(Client *client)
 
         bytes_received += received;
     }
+
+    return i;
 }
 
-void SocketManager::send_integer_to(Client *client, int i)
+void ClientsHandler::send_integer_to(Client *client, int i)
 {
     if(send(client->getSocket(), &i, sizeof(i), 0) < 0)
     {
@@ -95,7 +90,7 @@ void SocketManager::send_integer_to(Client *client, int i)
     }
 }
 
-void SocketManager::send_string_to(Client *client, string msg)
+void ClientsHandler::send_string_to(Client *client, string msg)
 {
     size_t len = msg.length();
 
@@ -114,7 +109,7 @@ void SocketManager::send_string_to(Client *client, string msg)
     }
 }
 
-string SocketManager::receive_string_from(Client *client)
+string ClientsHandler::receive_string_from(Client *client)
 {
     size_t str_len = 0;
     size_t bytes_received = 0;
@@ -135,7 +130,8 @@ string SocketManager::receive_string_from(Client *client)
 
     bytes_received = 0;
 
-    char *buffer = new char[str_len];
+    char *buffer = new char[str_len + 1];
+    memset(buffer, 0, str_len+1);
 
     //On récupère la chaine
     while(bytes_received < str_len)
@@ -154,7 +150,10 @@ string SocketManager::receive_string_from(Client *client)
     return string(buffer);
 }
 
-SocketManager::~SocketManager()
+ClientsHandler::~ClientsHandler()
 {
-    close(_serv_sock);
+    for(Client* client : _clients)
+        delete client;
+
+    _clients.clear();
 }

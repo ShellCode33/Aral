@@ -21,13 +21,17 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void create_boat(const string &boat_string);
+
+private slots:
+    void on_listView_pressed(const QModelIndex &index);
 
 private:
     Ui::MainWindow *_ui;
-    QWebEngineView *_webView;
-    QStringListModel *_listModel;
-    SocketManager _socketManager;
+    QWebEngineView _web_view;
+    QStringList _values;
     std::vector<Boat> _boats;
+    QStringListModel *_list_model;
 };
 
 #endif // MAINWINDOW_H

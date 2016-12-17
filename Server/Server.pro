@@ -10,13 +10,15 @@ SOURCES += \
     main.cpp \
     ../Common/boat.cpp \
     client.cpp \
-    socketmanager.cpp \
-    udpreceiver.cpp
+    server.cpp \
+    beaconshandler.cpp \
+    clientshandler.cpp
 
 HEADERS += \
     ../coordinates.h \
     ../Common/boat.h \
     ../Common/packet.h \
     client.h \
-    socketmanager.h \
-    udpreceiver.h
+    server.h \
+    beaconshandler.h \
+    clientshandler.h

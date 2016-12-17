@@ -6,51 +6,22 @@
 #include <iostream>
 #include <thread>
 
-#include "udpreceiver.h"
-#include "socketmanager.h"
+#include "beaconshandler.h"
+#include "clientshandler.h"
 #include "client.h"
 
 using namespace std;
 
-void catch_beacon_data(vector<Boat> * boats) {
-    UdpReceiver receiver = UdpReceiver();
-    string received = "";
-
-    while(true)
-    {
-        received = receiver.receive_string();
-        cout << "Received: " << received << endl;
-    }
-
-    receiver.close_socket();
-}
-
-void process_clients(vector<Boat> * boats) {
-
-    SocketManager socketManager;
-    vector<Client*> clients;
-
-    while(true) //On gère la connexion d'un client indéfiniement
-    {
-        Client *client = socketManager.wait_new_client();
-        clients.push_back(client);
-        client->manage(boats);
-    }
-
-    for(Client* client : clients)
-        delete client;
-
-    clients.clear();
-}
-
 int main() {
 
-    vector<Boat> boats;
-    thread beacon_th(catch_beacon_data, &boats);
-    thread client_th(process_clients, &boats);
+    BeaconsHandler beacon_handler;
+    ClientsHandler client_handler;
 
-    beacon_th.join();
-    client_th.join();
+    //On démarre la gestion des balises dans un thread séparé
+    //thread beacon_th(&BeaconsHandler::start, beacon_handler);
+    //beacon_th.detach();
+    //On démarre la gestion des clients dans le thread principal
+    client_handler.start();
 
     return 0;
 }

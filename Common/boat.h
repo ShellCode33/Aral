@@ -21,8 +21,8 @@ public:
     std::string toString() const;
     std::string getName() const;
 private:
-    Cap _current_cap;
     std::string _name;
+    Cap _current_cap;
     std::pair<double, double> _location;
     std::vector<std::pair<double, double>> _location_history;
     std::string _last_time_receiving;
