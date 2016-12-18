@@ -22,7 +22,7 @@ public:
     BeaconsHandler();
     std::string receive_string();
     Boat *create_boat(const std::string &beacon_string) const;
-    void start() override;
+    void run() override;
 
 };
 

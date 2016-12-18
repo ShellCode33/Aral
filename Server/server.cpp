@@ -14,7 +14,7 @@ Server::Server(Mode mode)
 
     if(_serv_sock < 0)
     {
-        cerr << "socket error" << endl;
+        cerr << "socket() error : " << errno << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -26,14 +26,14 @@ Server::Server(Mode mode)
     //On bind la socket avec la structure contenant les informations
     if(bind(_serv_sock, (struct sockaddr*)&_serv_addr, sizeof(_serv_addr)) < 0)
     {
-        cerr << "bind error : " << errno << endl;
+        cerr << "bind() error : " << errno << endl;
         exit(EXIT_FAILURE);
     }
 
     if(mode == TCP)
     {
         //La socket server va écouter les connexions
-        listen(_serv_sock, 10);
+        listen(_serv_sock, 10); //10 clients max
         cout << "PORT " << PORT_TCP << " : TCP";
     }
 
@@ -49,7 +49,27 @@ std::vector<Boat *> &Server::getBoats()
 }
 
 Server::~Server()
-{
+{    
+    cout << "Stopping server..." << endl;
+
+    delete _run_thread;
+
+    for(Boat *boat : _boats)
+        delete boat;
+
+    _boats.clear();
     close(_serv_sock);
+}
+
+void Server::start()
+{
+    //On appelle la methode abstraite dans un nouveau thread
+    _run_thread = new thread(&Server::run, this);
+    _run_thread->detach();
+}
+
+void Server::startAndJoin()
+{
+    run();
 }
 

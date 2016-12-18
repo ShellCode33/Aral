@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
     ../Common/boat.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    map.js

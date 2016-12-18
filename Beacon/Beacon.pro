@@ -7,13 +7,8 @@ QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp \
     datasender.cpp \
-    clock.cpp \
-    moment.cpp \
-    ../coordinates.cpp
+    ../Common/boat.cpp
 
 HEADERS += \
-    coordinates.h \
-    clock.h \
-    moment.h \
-    ../coordinates.h \
-    datasender.h
+    datasender.h \
+    ../Common/boat.h

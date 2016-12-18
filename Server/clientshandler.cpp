@@ -18,8 +18,8 @@ Client* ClientsHandler::wait_new_client()
     //On crée la socket associé au client
     socklen_t c = sizeof(struct sockaddr_in);
     if((client_sock = accept(_serv_sock, (struct sockaddr *)&client_addr, &c)) < 0){
-        cerr << "accept error" << endl;
-        exit(EXIT_FAILURE);
+        cerr << "accept error, clients count limit ?" << endl;
+        //exit(EXIT_FAILURE);
     }
 
     cout << "A new client is connected !" << endl;
@@ -51,7 +51,7 @@ Packet ClientsHandler::receive_packet_from(Client *client)
     return packet;
 }
 
-void ClientsHandler::start()
+void ClientsHandler::run()
 {
     cout << "ClientsHandler looping..." << endl;
 

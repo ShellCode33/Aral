@@ -18,10 +18,10 @@ int main() {
     ClientsHandler client_handler;
 
     //On démarre la gestion des balises dans un thread séparé
-    //thread beacon_th(&BeaconsHandler::start, beacon_handler);
-    //beacon_th.detach();
+    beacon_handler.start();
+
     //On démarre la gestion des clients dans le thread principal
-    client_handler.start();
+    client_handler.startAndJoin();
 
     return 0;
 }

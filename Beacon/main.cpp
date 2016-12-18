@@ -6,37 +6,41 @@
 #include <unistd.h> /* close */
 
 #include "datasender.h"
-#include "../coordinates.h"
-#include "clock.h"
+
+#define BEACON //On se définit comme étant une balise afin de ne pas compiler ce qui ne nous concerne pas dans boat.h et boat.cpp
+#include "../Common/boat.h"
 
 using namespace std;
 
-int main(int argc, char **argv) {
-
-    if(argc < 2) {
-       cerr << "Usage ./beacon [boat_id]";
+int main(int argc, char **argv)
+{
+    if(argc < 2)
+    {
+       cerr << "Usage : " << argv[0] << " [boat_name]" << endl;
        exit(EXIT_FAILURE);
     }
 
-    string BOAT_ID = argv[1];
+    srand(time(NULL));
 
-    DataSender* sender = new DataSender();
+    Boat boat(argv[1]);
+    boat.setCap(static_cast<Cap>(rand() % 4 + 1));
 
-    Clock timer = Clock();
-    timer.set_alarm(Moment(0, 0, 0, 500, 0));
-    timer.start();
+    //position aléatoire dans l'océan pacifique
+    //latitude de 30 à 14
+    //longitude de 123 à 150
+    double latitude = 14 + ( rand() % ( 30 - 14 + 1 ) );
+    double longitude = 123 + ( rand() % ( 150 - 123 + 1 ) );
+    boat.setLocation(latitude, longitude);
 
-    while(1) {
-        timer.check_time();
-        if(timer.has_ticked()) {
-            timer.reset();
-            sender->send_string(BOAT_ID + "=" + Coordinates().toString());
-        }
+
+    DataSender sender;
+
+    while(1)
+    {
+        sender.send_string(boat.toString());
+        sleep(1);
     }
 
-    sender->close_socket();
-
-    delete sender;
     return 0;
 }
 

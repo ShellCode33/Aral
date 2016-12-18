@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h> /* close */
 
-#define PORT 25700
+#define PORT 1338
 #define SERV_ADDR "127.0.0.1"
 
 using namespace std;
@@ -21,10 +21,8 @@ private:
 
 public:
     DataSender();
-
+    ~DataSender();
     void send_string(string coordinates);
-
-    void close_socket();
 };
 
 #endif // DATASENDER_H

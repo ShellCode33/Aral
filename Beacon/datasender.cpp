@@ -21,6 +21,7 @@ void DataSender::send_string(string coordinates) {
         cerr << "socket error" << endl;
 }
 
-void DataSender::close_socket() {
+DataSender::~DataSender()
+{
     close(_serv_sock);
 }

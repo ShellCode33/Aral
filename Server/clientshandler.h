@@ -19,7 +19,7 @@ class ClientsHandler : public Server
 public:
     ClientsHandler();
     ~ClientsHandler();
-    void start() override;
+    void run() override;
     int receive_integer_from(Client *client);
     void send_integer_to(Client *client, int i);
     std::string receive_string_from(Client *client);
