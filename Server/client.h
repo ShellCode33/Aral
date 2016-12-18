@@ -12,9 +12,11 @@ class Client
 {
 public:
     Client(int sock, sockaddr_in addr, ClientsHandler &clients_handler);
+    ~Client();
     void manage();
     int getSocket();
     struct sockaddr_in getAddr();
+    int getId();
 
 private:
     static int _current_id;
@@ -23,6 +25,8 @@ private:
     sockaddr_in _addr;
     ClientsHandler & _clients_handler;
     void process_requests();
+    std::thread _job;
+    bool _job_active;
 };
 
 #endif // CLIENT_H

@@ -38,8 +38,11 @@ Packet ClientsHandler::receive_packet_from(Client *client)
 
         if(received == 0)
         {
+            removeClient(client);
+            /*
             cerr << "receiving packet error !" << endl;
             exit(EXIT_FAILURE);
+            */
         }
 
         bytes_received += received;
@@ -71,8 +74,11 @@ int ClientsHandler::receive_integer_from(Client *client)
 
         if(received == 0)
         {
+            removeClient(client);
+            /*
             cerr << "receiving packet error !" << endl;
             exit(EXIT_FAILURE);
+            */
         }
 
         bytes_received += received;
@@ -85,8 +91,11 @@ void ClientsHandler::send_integer_to(Client *client, int i)
 {
     if(send(client->getSocket(), &i, sizeof(i), 0) < 0)
     {
+        removeClient(client);
+        /*
         std::cout << "send failed" << std::endl;
         exit(EXIT_FAILURE);
+        */
     }
 }
 
@@ -97,15 +106,21 @@ void ClientsHandler::send_string_to(Client *client, string msg)
     //On envoie la taille de la chaine de carac
     if(send(client->getSocket(), &len, sizeof(len), 0) < 0)
     {
+        removeClient(client);
+        /*
         cerr << "send failed";
         exit(EXIT_FAILURE);
+        */
     }
 
     //Envoie la chaine de carac
     if(send(client->getSocket(), msg.c_str(), msg.length(), 0) < 0)
     {
+        removeClient(client);
+        /*
         cerr << "send failed";
         exit(EXIT_FAILURE);
+        */
     }
 }
 
@@ -121,8 +136,11 @@ string ClientsHandler::receive_string_from(Client *client)
 
         if(received == 0)
         {
+            removeClient(client);
+            /*
             cerr << "Error while receiving size of string" << endl;
             exit(EXIT_FAILURE);
+            */
         }
 
         bytes_received += received;
@@ -140,14 +158,33 @@ string ClientsHandler::receive_string_from(Client *client)
 
         if(received == 0)
         {
+            removeClient(client);
+            /*
             cerr << "Error while receiving string" << endl;
             exit(EXIT_FAILURE);
+            */
         }
 
         bytes_received += received;
     }
 
     return string(buffer);
+}
+
+void ClientsHandler::removeClient(Client *client)
+{
+    cout << "Removing client " << client->getId() << "... ";
+    vector<Client*>::iterator it = find(_clients.begin(), _clients.end(), client);
+
+    if(it != _clients.end())
+    {
+        _clients.erase(it);
+        delete client;
+        cout << " done !" << endl;
+    }
+
+    else
+        cout << " error !" << endl;
 }
 
 ClientsHandler::~ClientsHandler()

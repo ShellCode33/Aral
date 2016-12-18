@@ -30,7 +30,7 @@ private:
     Ui::MainWindow *_ui;
     QWebEngineView _web_view;
     QStringList _values;
-    std::vector<Boat> _boats;
+    std::vector<Boat*> _boats;
     QStringListModel *_list_model;
 };
 

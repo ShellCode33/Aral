@@ -20,6 +20,10 @@ public:
     double getLongitude() const;
     std::string toString() const;
     std::string getName() const;
+    static void processBoatString(const std::string &boat_string, std::vector<std::string> & result);
+    void setCap(Cap cap);
+    void setTime(const std::string & time);
+
 private:
     std::string _name;
     Cap _current_cap;

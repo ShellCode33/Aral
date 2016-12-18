@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     MainWindow mainWindow;
 
     SocketManager socket_manager;
+    socket_manager.tryConnect();
     socket_manager.send_packet(GET_ALL_BOATS); //On fait la demande de récupérer tous les bateaux
     int boats_count = socket_manager.receive_integer(); //On récupère le nombre de bateaux
 

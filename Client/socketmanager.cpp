@@ -11,11 +11,14 @@ SocketManager::SocketManager()
     _server.sin_addr.s_addr = inet_addr("127.0.0.1");
     _server.sin_port = htons(PORT);
     _server.sin_family = AF_INET;
+}
 
+void SocketManager::tryConnect()
+{
     //Connexion
-    if(connect(_sock, (struct sockaddr *)&_server , sizeof(_server)) < 0) {
+    while(connect(_sock, (struct sockaddr *)&_server, sizeof(_server)) < 0) {
         cerr << "connect failed on PORT : " << PORT << endl;
-        exit(EXIT_FAILURE);
+        sleep(1);
     }
 
     cout << "Connected to the server !" << endl;

@@ -27,6 +27,15 @@ void MainWindow::on_listView_pressed(const QModelIndex &index)
 void MainWindow::create_boat(const string & boat_string)
 {
     cout << "Creating boat with : " << boat_string << endl;
-    _boats.push_back(Boat(boat_string));
-    _values << boat_string.c_str();
+    vector<string> result;
+    Boat::processBoatString(boat_string, result);
+
+    Boat *boat = new Boat(result.at(0));
+    boat->setLocation(stod(result.at(1)), stod(result.at(2)));
+    boat->setCap(result.at(3) == "N" ? NORTH : (result.at(3) == "E" ? EAST : (result.at(3) == "W" ? WEST : SOUTH)));
+    boat->setTime(result.at(4));
+
+    _boats.push_back(boat);
+    _list_model->insertRow(_list_model->rowCount());
+    _list_model->setData(_list_model->index(_list_model->rowCount()-1), boat->getName().c_str());
 }

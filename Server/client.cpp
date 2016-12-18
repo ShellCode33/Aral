@@ -5,7 +5,7 @@ using namespace std;
 
 int Client::_current_id = 0;
 
-Client::Client(int sock, sockaddr_in addr, ClientsHandler &clients_handler) : _client_id(_current_id++), _sock(sock), _addr(addr), _clients_handler(clients_handler)
+Client::Client(int sock, sockaddr_in addr, ClientsHandler &clients_handler) : _client_id(_current_id++), _sock(sock), _addr(addr), _clients_handler(clients_handler), _job(&Client::process_requests, this), _job_active(true)
 {
 
 }
@@ -13,8 +13,7 @@ Client::Client(int sock, sockaddr_in addr, ClientsHandler &clients_handler) : _c
 //Lance un thread qui va gérer toutes les demandes du client
 void Client::manage()
 {
-    thread t(&Client::process_requests, this);
-    t.detach();
+    _job.detach();
 }
 
 void Client::process_requests()
@@ -23,7 +22,7 @@ void Client::process_requests()
 
     vector<Boat*> boats = _clients_handler.getBoats();
 
-    while(true)
+    while(_job_active)
     {
         Packet packet = _clients_handler.receive_packet_from(this);
 
@@ -56,6 +55,8 @@ void Client::process_requests()
             break;
         }
     }
+
+    cout << "Thread of client " << _client_id << " is stopping" << endl;
 }
 
 int Client::getSocket()
@@ -66,4 +67,15 @@ int Client::getSocket()
 sockaddr_in Client::getAddr()
 {
     return _addr;
+}
+
+int Client::getId()
+{
+    return _client_id;
+}
+
+Client::~Client()
+{
+    _job_active = false;
+    close(_sock);
 }

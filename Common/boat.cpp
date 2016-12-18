@@ -38,8 +38,40 @@ string Boat::toString() const
     boat_string.append(":");
     boat_string.append(to_string(getLatitude()));
     boat_string.append(":");
-    boat_string.append(to_string(_current_cap));
+    boat_string.append(_current_cap == NORTH ? "N" : (_current_cap == EAST ? "E" : (_current_cap == WEST ? "W" : "S")));
     boat_string.append(":");
     boat_string.append("4h20");
     return boat_string;
+}
+
+//static
+void Boat::processBoatString(const string & boat_string, vector<string> & result)
+{
+    string current;
+
+    for(int i = 0; i < (int)boat_string.length(); i++)
+    {
+        char c = boat_string.at(i);
+
+        if(c != ':')
+            current += c;
+
+        else
+        {
+            result.push_back(current);
+            current.clear();
+        }
+    }
+
+    result.push_back(current);
+}
+
+void Boat::setCap(Cap cap)
+{
+    _current_cap = cap;
+}
+
+void Boat::setTime(const string & time)
+{
+    _last_time_receiving = time;
 }
