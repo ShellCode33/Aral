@@ -27,6 +27,7 @@ public:
     void map_refresh();
 
 private slots:
+    void on_webview_load_over();
     void on_listView_pressed(const QModelIndex &index);
 
 private:

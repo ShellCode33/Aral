@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     for(int i = 0; i < boats_count; i++)
         mainWindow.create_boat(socket_manager.receive_string());
 
-    mainWindow.map_refresh();
+    //mainWindow.map_refresh();
 
     mainWindow.show();
     return a.exec();

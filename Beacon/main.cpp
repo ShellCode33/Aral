@@ -12,6 +12,11 @@
 
 using namespace std;
 
+double random_range(double min, double max)
+{
+    return min + (double)rand() / RAND_MAX * (max - min);
+}
+
 int main(int argc, char **argv)
 {
     if(argc < 2)
@@ -25,11 +30,11 @@ int main(int argc, char **argv)
     Boat boat(argv[1]);
     boat.setCap(static_cast<Cap>(rand() % 4 + 1));
 
-    //position aléatoire dans l'océan pacifique
-    //latitude de 30 à 14
-    //longitude de 123 à 150
-    double latitude = 14 + ( rand() % ( 30 - 14 + 1 ) );
-    double longitude = 123 + ( rand() % ( 150 - 123 + 1 ) );
+    //position aléatoire dans le golf du mexique
+    //27.652390, -96.459961
+    //22.723495, -85.297852
+    double latitude = random_range(22, 28);
+    double longitude = random_range(-85, -97);
     boat.setLocation(latitude, longitude);
 
 

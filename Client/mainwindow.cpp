@@ -11,7 +11,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _ui(new Ui::MainW
     _ui->verticalLayout->addWidget(&_web_view);
 
     srand(time(NULL));
-    //map_refresh();
+
+    string html = "<html><head></head><body><div id=\"map_wrapper\" style=\"height: 330px;\"><div id=\"map_canvas\" class=\"mapping\" style=\"width: 100%; height: 100%;\"></div></div></body></html>";
+    _web_view.page()->setHtml(html.c_str());
+
+    connect(&_web_view, SIGNAL(loadFinished(bool)), SLOT(on_webview_load_over()));
 }
 
 MainWindow::~MainWindow()
@@ -30,54 +34,37 @@ void MainWindow::on_listView_pressed(const QModelIndex &index)
     //cout << index << endl;
 }
 
+void MainWindow::on_webview_load_over()
+{
+    map_refresh();
+}
+
 void MainWindow::map_refresh()
 {
     string available_colors[] = {"blue", "green", "yellow", "red", "orange", "black", "white", "brown"};
-/*
-    string url_str =    "https://www.google.com/maps/embed/v1/view"
-                        "?key=AIzaSyC1yGPocd2V99epBPnDcagnmpXZbeZ-aF8"
-                        "&zoom=18"
-                        "&maptype=satellite";
 
-
-    Boat *boat = _boats.at(0);
-        url_str += "&markers=color:";
-        url_str += available_colors[rand() % (sizeof(available_colors) / sizeof(available_colors[0]))]; //couleur aléatoire
-        url_str += "|label:";
-        url_str += boat->getName();
-        url_str += "|";
-        url_str += to_string(boat->getLatitude());
-        url_str += ",";
-        url_str += to_string(boat->getLongitude());
-
-
-    url_str += "&center=16.0,120.0";
-
-    if(_boats.size() > 0)
+    string markers_js = "var markers = [";
+    for(Boat *boat : _boats)
     {
-        url_str += "&center=";
-        url_str += to_string(_boats.at(0)->getLatitude());
-        url_str += ",";
-        url_str += to_string(_boats.at(0)->getLongitude());
+        string lat = to_string(boat->getLatitude());
+        string longi = to_string(boat->getLongitude());
+
+        //la fonction to_string() met des , pour les doubles plutot que des . il faut donc les remplacer
+        lat.replace(lat.find(','), 1, ".");
+        longi.replace(longi.find(','), 1, ".");
+
+        string marker = "['" + boat->getName() + "', " + lat + ", "  + longi + "],";
+        std::cout << "add marker : " << marker << std::endl;
+        markers_js += marker;
     }
 
-    else
-        url_str += "&center=19.0,130.0";
-
-    string html =      "<iframe id=\"map\""
-                       " style=\"overflow: hidden;\""
-                       " width=\"" + to_string(_web_view.width()) + "\""
-                       " height=\"" + to_string(_web_view.height()) + "\""
-                       " frameborder=\"0\" style=\"border:0\""
-                       " src=\"" + url_str + "\" allowfullscreen>"
-                       "</iframe>"
-                       "<style type=\"text/css\">body { overflow:hidden; }</script>";
-*/
-    string html = "<html><head></head><body><div id=\"map_wrapper\" style=\"height: 400px;\"><div id=\"map_canvas\" class=\"mapping\" style=\"width: 100%; height: 100%;\"></div></div></body></html>";
+    markers_js.erase(markers_js.begin()+markers_js.size(), markers_js.end()); //on enlève la dernière virgule
+    markers_js += "];";
 
     QFile jquery("/home/shellcode/IUT/ProgSystem/Aral/Client/jquery.js");
     jquery.open(QIODevice::ReadOnly);
     QString js_jquery = jquery.readAll();
+    js_jquery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
     jquery.close();
 
     QFile map_js("/home/shellcode/IUT/ProgSystem/Aral/Client/map.js");
@@ -85,9 +72,9 @@ void MainWindow::map_refresh()
     QString js_map = map_js.readAll();
     map_js.close();
 
-    _web_view.page()->setHtml(html.c_str());
-    _web_view.page()->runJavaScript(js_jquery.toStdString().c_str());
-    _web_view.page()->runJavaScript(js_map.toStdString().c_str());
+    _web_view.page()->runJavaScript(js_jquery.toStdString().c_str()); //on ajoute la librairie jquery
+    _web_view.page()->runJavaScript(markers_js.c_str()); // on ajoute les markers (qui sont en fait la representation des bateaux) à faire apparaitre sur la carte
+    _web_view.page()->runJavaScript(js_map.toStdString().c_str()); //on lance le js qui gère la position des bateaux sur la map
 }
 
 void MainWindow::create_boat(const string & boat_string)
