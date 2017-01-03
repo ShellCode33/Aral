@@ -73,6 +73,7 @@ void BeaconsHandler::run()
                     _clients_handler.send_string_to(client, boat_to_update->toString());
                 }
             }
+
         }
     }
 }

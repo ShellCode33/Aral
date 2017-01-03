@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <vector>
 #include <thread>
+#include <mutex>
 #include "../Common/boat.h"
 #include <cstring> //memset
 
@@ -33,6 +34,7 @@ protected:
     int _serv_sock;
     sockaddr_in _serv_addr;
     static std::vector<Boat*> _boats;
+    static std::mutex _boats_mutex;
 
 private:
     std::thread *_run_thread;

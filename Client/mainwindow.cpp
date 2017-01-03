@@ -132,9 +132,9 @@ void MainWindow::update_boat(const string & boat_string)
 
 void MainWindow::run_refresh_thread(SocketManager & socketManager)
 {
+    _refresh_running = true;
     _refresh_thread = new std::thread(&MainWindow::refresh, this, &socketManager);
     _refresh_thread->detach();
-    _refresh_running = true;
 }
 
 void MainWindow::refresh(SocketManager * socketManager)
