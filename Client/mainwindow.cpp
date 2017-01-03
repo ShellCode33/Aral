@@ -36,13 +36,6 @@ void MainWindow::on_listView_pressed(const QModelIndex &index)
 
 void MainWindow::on_webview_load_over()
 {
-    map_refresh();
-}
-
-void MainWindow::map_refresh()
-{
-    string available_colors[] = {"blue", "green", "yellow", "red", "orange", "black", "white", "brown"};
-
     string markers_js = "var markers = [";
     for(Boat *boat : _boats)
     {
