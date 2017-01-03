@@ -31,10 +31,10 @@ int main(int argc, char **argv)
     boat.setCap(static_cast<Cap>(rand() % 4 + 1));
 
     //position aléatoire dans le golf du mexique
-    //27.652390, -96.459961
-    //22.723495, -85.297852
-    double latitude = random_range(22, 28);
-    double longitude = random_range(-85, -97);
+    //45.522321 59.427795
+    //44.414753 59.878235
+    double latitude = random_range(44.414753, 45.522321);
+    double longitude = random_range(59.427795, 59.878235);
     boat.setLocation(latitude, longitude);
 
 

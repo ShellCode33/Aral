@@ -43,10 +43,13 @@ void MainWindow::on_webview_load_over()
         string longi = to_string(boat->getLongitude());
 
         //la fonction to_string() met des , pour les doubles plutot que des . il faut donc les remplacer
-        lat.replace(lat.find(','), 1, ".");
-        longi.replace(longi.find(','), 1, ".");
+        if(lat.find(',') != string::npos)
+            lat.replace(lat.find(','), 1, ".");
 
-        string marker = "['" + boat->getName() + "', " + lat + ", "  + longi + "],";
+        if(longi.find(',') != string::npos)
+            longi.replace(longi.find(','), 1, ".");
+
+        string marker = "['" + boat->getName() + "', " + lat + ", "  + longi + ", '" + boat->capToString(boat->getCap()) + "', '" + boat->getLastTimeReceiving() + "'],";
         std::cout << "add marker : " << marker << std::endl;
         markers_js += marker;
     }
@@ -54,13 +57,13 @@ void MainWindow::on_webview_load_over()
     markers_js.erase(markers_js.begin()+markers_js.size(), markers_js.end()); //on enlève la dernière virgule
     markers_js += "];";
 
-    QFile jquery("/home/shellcode/IUT/ProgSystem/Aral/Client/jquery.js");
+    QFile jquery("jquery.js");
     jquery.open(QIODevice::ReadOnly);
     QString js_jquery = jquery.readAll();
     js_jquery.append("\nvar qt = { 'jQuery': jQuery.noConflict(true) };");
     jquery.close();
 
-    QFile map_js("/home/shellcode/IUT/ProgSystem/Aral/Client/map.js");
+    QFile map_js("map.js");
     map_js.open(QIODevice::ReadOnly);
     QString js_map = map_js.readAll();
     map_js.close();

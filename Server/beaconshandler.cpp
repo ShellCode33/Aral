@@ -54,6 +54,7 @@ void BeaconsHandler::run()
                 boat_to_update->setCap(boat->getCap());
                 boat_to_update->setLocation(boat->getLatitude(), boat->getLongitude());
                 boat_to_update->setTime("13h37");
+                delete boat;
             }
 
             else

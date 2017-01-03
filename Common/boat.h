@@ -21,8 +21,10 @@ public:
     std::string toString() const;
     std::string getName() const;
     Cap getCap() const;
+    std::string capToString(Cap cap) const;
     void setCap(Cap cap);
 #ifndef BEACON
+    std::string getLastTimeReceiving() const;
     void setTime(const std::string & time);
     static Boat * create(const std::string & boat_string);
 #endif

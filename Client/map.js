@@ -49,10 +49,11 @@ function initialize() {
     // Display a map on the page
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
     map.setTilt(45);
-    map.setOptions({ minZoom: 5, maxZoom: 8 });
+    map.setOptions({ minZoom: 1, maxZoom: 10 });
 
     // Display multiple markers on a map
-    var infoWindow = new google.maps.InfoWindow(), marker, i;
+    var marker, i, lastCalledInfoWindow = null;
+
 
     var colors = ["blue", "green", "yellow", "red", "orange", "white", "brown"];
 
@@ -76,17 +77,27 @@ function initialize() {
         // Allow each marker to have an info window
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-                //detection du clic sur une infobulle
+
+                if(lastCalledInfoWindow != null)
+                    lastCalledInfoWindow.close();
+
+                var str = "<h1>" + markers[i][0] + "</h1><br />" +
+                        "<b>Latitude : </b>" + markers[i][1] + "<br />" +
+                        "<b>Longitude : </b>" + markers[i][2] + "<br />" +
+                        "<b>Cap : </b>" + markers[i][3] + "<br />" +
+                        "<b>Last Time Seen : </b>" + markers[i][4] + "<br />";
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: str
+                });
+
+                lastCalledInfoWindow = infoWindow;
+
+                infoWindow.open(map, marker);
             }
         })(marker, i));
 
         // Automatically center the map fitting all markers on the screen
         map.fitBounds(bounds);
     }
-
-    //trick
-    var listener = google.maps.event.addListener(map, "idle", function() {
-      map.setZoom(5);
-      google.maps.event.removeListener(listener);
-    });
 }

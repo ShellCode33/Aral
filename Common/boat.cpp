@@ -1,5 +1,7 @@
 #include "boat.h"
 
+#include <QLocale>
+
 using namespace std;
 
 Boat::Boat(string name) : _name(name), _current_cap(NORTH)
@@ -24,6 +26,11 @@ Cap Boat::getCap() const
     return _current_cap;
 }
 
+string Boat::capToString(Cap cap) const
+{
+    return _current_cap == NORTH ? "NORTH" : (_current_cap == EAST ? "EAST" : (_current_cap == WEST ? "WEST" : "SOUTH"));
+}
+
 double Boat::getLatitude() const
 {
     return _location.first;
@@ -43,10 +50,15 @@ string Boat::toString() const
     boat_string.append(":");
     boat_string.append(to_string(getLongitude()));
     boat_string.append(":");
-    boat_string.append(_current_cap == NORTH ? "N" : (_current_cap == EAST ? "E" : (_current_cap == WEST ? "W" : "S")));
+    boat_string.append(capToString(_current_cap));
     boat_string.append(":");
     boat_string.append("4h20");
     return boat_string;
+}
+
+string Boat::getLastTimeReceiving() const
+{
+    return _last_time_receiving;
 }
 
 #ifndef BEACON
@@ -84,12 +96,18 @@ void Boat::setTime(const string & time)
 
 Boat* Boat::create(const string &boat_string)
 {
+    std::cout << boat_string << std::endl;
     vector<string> result;
     processBoatString(boat_string, result);
 
     Boat *boat = new Boat(result.at(0));
-    boat->setLocation(stod(result.at(1)), stod(result.at(2)));
-    boat->setCap(result.at(3) == "N" ? NORTH : (result.at(3) == "E" ? EAST : (result.at(3) == "W" ? WEST : SOUTH)));
+
+    QLocale c(QLocale::C); //Obligé de passer par la librairie de QT pour la conversion string -> double car en mode release le resultat n'est pas le même qu'en debug
+    double lat = c.toDouble(result.at(1).c_str());
+    double longi = c.toDouble(result.at(2).c_str());
+
+    boat->setLocation(lat, longi);
+    boat->setCap(result.at(3) == "NORTH" ? NORTH : (result.at(3) == "EAST" ? EAST : (result.at(3) == "WEST" ? WEST : SOUTH)));
     boat->setTime(result.at(4));
 
     return boat;
