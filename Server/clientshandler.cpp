@@ -63,6 +63,11 @@ void ClientsHandler::run()
     }
 }
 
+vector<Client*> ClientsHandler::getClients() const
+{
+    return _clients;
+}
+
 int ClientsHandler::receive_integer_from(Client *client)
 {
     int i;
@@ -90,6 +95,18 @@ int ClientsHandler::receive_integer_from(Client *client)
 void ClientsHandler::send_integer_to(Client *client, int i)
 {
     if(send(client->getSocket(), &i, sizeof(i), 0) < 0)
+    {
+        removeClient(client);
+        /*
+        std::cout << "send failed" << std::endl;
+        exit(EXIT_FAILURE);
+        */
+    }
+}
+
+void ClientsHandler::send_packet_to(Client *client, Packet packet)
+{
+    if(send(client->getSocket(), &packet, sizeof(packet), 0) < 0)
     {
         removeClient(client);
         /*

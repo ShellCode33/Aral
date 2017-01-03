@@ -2,7 +2,7 @@
 
 using namespace std;
 
-BeaconsHandler::BeaconsHandler() : Server(UDP)
+BeaconsHandler::BeaconsHandler(ClientsHandler &clients_handler) : Server(UDP), _clients_handler(clients_handler)
 {
 
 }
@@ -55,11 +55,23 @@ void BeaconsHandler::run()
                 boat_to_update->setLocation(boat->getLatitude(), boat->getLongitude());
                 boat_to_update->setTime("13h37");
                 delete boat;
+
+                for(Client *client : _clients_handler.getClients())
+                {
+                    _clients_handler.send_packet_to(client, BOAT_UPDATED);
+                    _clients_handler.send_string_to(client, boat_to_update->toString());
+                }
             }
 
             else
             {
                 _boats.push_back(boat);
+
+                for(Client *client : _clients_handler.getClients())
+                {
+                    _clients_handler.send_packet_to(client, BOAT_CREATED);
+                    _clients_handler.send_string_to(client, boat_to_update->toString());
+                }
             }
         }
     }

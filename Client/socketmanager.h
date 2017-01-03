@@ -29,6 +29,7 @@ public:
     void close_sockets();
     int receive_integer();
     void tryConnect();
+    Packet receive_packet();
 };
 
 #endif // SERVERHANDLER_H

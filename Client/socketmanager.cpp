@@ -52,6 +52,27 @@ void SocketManager::send_string(string msg)
     }
 }
 
+Packet SocketManager::receive_packet()
+{
+    Packet packet;
+    size_t bytes_received = 0;
+
+    while(bytes_received < sizeof(Packet))
+    {
+        int received = recv(_sock, &packet+bytes_received, sizeof(Packet)-bytes_received, 0);
+
+        if(received == 0)
+        {
+            cerr << "receiving packet error !" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        bytes_received += received;
+    }
+
+    return packet;
+}
+
 int SocketManager::receive_integer()
 {
     int value;

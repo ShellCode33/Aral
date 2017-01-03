@@ -1,8 +1,15 @@
+var mapIsLoaded = false;
+
 qt.jQuery(function($) {
     // Asynchronously Load the map API
     var script = document.createElement('script');
-    script.src = "https://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
-    document.body.appendChild(script);
+    script.src = "https://maps.googleapis.com/maps/api/js?callback=initialize&key=AIzaSyBoWBTZJjAu8UYdtdMXXtHeZ8a8O5XgERs";
+
+    if(navigator.onLine)
+    {
+        document.body.appendChild(script);
+        mapIsLoaded = true;
+    }
 });
 
 //convertir couleur en code
