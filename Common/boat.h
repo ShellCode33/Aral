@@ -3,12 +3,18 @@
 
 #include <iostream>
 #include <vector>
+#include <utility>
 
-enum Cap {
+enum VDirection {
     NORTH,
-    EAST,
     SOUTH,
-    WEST
+    V_NONE
+};
+
+enum HDirection{
+    EAST,
+    WEST,
+    H_NONE
 };
 
 class Boat
@@ -20,17 +26,24 @@ public:
     double getLongitude() const;
     std::string toString() const;
     std::string getName() const;
-    Cap getCap() const;
-    std::string capToString(Cap cap) const;
-    void setCap(Cap cap);
+    std::string capToString() const;
+
+    VDirection getVdirection() const;
+    void setVdirection(const VDirection &vdirection);
+
+    HDirection getHdirection() const;
+    void setHdirection(const HDirection &hdirection);
+
 #ifndef BEACON
     std::string getLastTimeReceiving() const;
     void setTime(const std::string & time);
     static Boat * create(const std::string & boat_string);
 #endif
+
 private:
     std::string _name;
-    Cap _current_cap;
+    VDirection _vdirection;
+    HDirection _hdirection;
     std::pair<double, double> _location;
 
 #ifndef BEACON
