@@ -14,8 +14,8 @@ using namespace std;
 
 int main() {
 
-    BeaconsHandler beacon_handler;
     ClientsHandler client_handler;
+    BeaconsHandler beacon_handler(client_handler);
 
     //On démarre la gestion des balises dans un thread séparé
     beacon_handler.start();

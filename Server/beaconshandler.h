@@ -17,9 +17,10 @@ class BeaconsHandler : public Server
 {
 
 private:
+    ClientsHandler &_clients_handler;
 
 public:
-    BeaconsHandler();
+    BeaconsHandler(ClientsHandler &clients_handler);
     std::string receive_string();
     Boat *create_boat(const std::string &beacon_string) const;
     void run() override;

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _ui(new Ui::MainWindow), _refresh_running(false)
 {
     _ui->setupUi(this);
 
@@ -27,11 +27,38 @@ MainWindow::~MainWindow()
 
     delete _list_model;
     delete _ui;
+
+    _refresh_running = false; //will stop the refresh thread
 }
 
 void MainWindow::on_listView_pressed(const QModelIndex &index)
 {
-    //cout << index << endl;
+    Boat *clickedBoat = nullptr;
+
+    for(Boat *boat : _boats)
+        if(boat->getName() == index.data().toString().toStdString())
+        {
+            clickedBoat = boat;
+            break;
+        }
+
+    if(clickedBoat != nullptr)
+    {
+        cout << "You choose boat : " << clickedBoat->getName() << endl;
+        _web_view.page()->runJavaScript(QString::fromStdString("var boat_name = '" + clickedBoat->getName() + "'"));
+        _web_view.page()->runJavaScript(QString::fromStdString("var boat_latitude = '" + to_string(clickedBoat->getLatitude()) + "'"));
+        _web_view.page()->runJavaScript(QString::fromStdString("var boat_longitude = '" + to_string(clickedBoat->getLongitude()) + "'"));
+        _web_view.page()->runJavaScript(QString::fromStdString("var boat_cap = '" + clickedBoat->capToString() + "'"));
+
+        QFile file("on_list_view_clic.js");
+        file.open(QIODevice::ReadOnly);
+        QString js_updater = file.readAll();
+        file.close();
+        _web_view.page()->runJavaScript(js_updater);
+    }
+
+    else
+        cout << "Can't find clicked boat !" << endl;
 }
 
 void MainWindow::on_webview_load_over()
@@ -49,7 +76,7 @@ void MainWindow::on_webview_load_over()
         if(longi.find(',') != string::npos)
             longi.replace(longi.find(','), 1, ".");
 
-        string marker = "['" + boat->getName() + "', " + lat + ", "  + longi + ", '" + boat->capToString(boat->getCap()) + "', '" + boat->getLastTimeReceiving() + "'],";
+        string marker = "['" + boat->getName() + "', " + lat + ", "  + longi + ", '" + boat->capToString() + "', '" + boat->getLastTimeReceiving() + "'],";
         std::cout << "add marker : " << marker << std::endl;
         markers_js += marker;
     }
@@ -80,4 +107,55 @@ void MainWindow::create_boat(const string & boat_string)
     _boats.push_back(boat);
     _list_model->insertRow(_list_model->rowCount());
     _list_model->setData(_list_model->index(_list_model->rowCount()-1), boat->getName().c_str());
+}
+
+void MainWindow::update_boat(const string & boat_string)
+{
+    vector<string> result;
+    Boat::processBoatString(boat_string, result);
+
+    for(Boat *boat : _boats)
+    {
+        if(boat->getName() == result.at(0)) //boat found
+        {
+            QLocale c(QLocale::C); //Obligé de passer par la librairie de QT pour la conversion string -> double car en mode release le resultat n'est pas le même qu'en debug
+            double lat = c.toDouble(result.at(1).c_str());
+            double longi = c.toDouble(result.at(2).c_str());
+
+            boat->setLocation(lat, longi);
+            boat->setCap(result.at(3) == "NORTH" ? NORTH : (result.at(3) == "EAST" ? EAST : (result.at(3) == "WEST" ? WEST : SOUTH)));
+            boat->setTime(result.at(4));
+            break;
+        }
+    }
+}
+
+void MainWindow::run_refresh_thread(SocketManager & socketManager)
+{
+    _refresh_running = true;
+    _refresh_thread = new std::thread(&MainWindow::refresh, this, &socketManager);
+    _refresh_thread->detach();
+}
+
+void MainWindow::refresh(SocketManager * socketManager)
+{
+    while(_refresh_running)
+    {
+        Packet received_packet = socketManager->receive_packet();
+
+        switch (received_packet) {
+
+        case BOAT_CREATED:
+            create_boat(socketManager->receive_string());
+            break;
+
+        case BOAT_UPDATED:
+            update_boat(socketManager->receive_string());
+            break;
+
+        default:
+            cerr << "Unknown packet" << endl;
+            break;
+        }
+    }
 }

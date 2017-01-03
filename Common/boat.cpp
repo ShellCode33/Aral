@@ -1,7 +1,5 @@
 #include "boat.h"
 
-#include <sstream>
-
 using namespace std;
 
 Boat::Boat(string name) : _name{name}
@@ -112,15 +110,12 @@ Boat* Boat::create(const string &boat_string)
 
     Boat *boat = new Boat(result.at(0));
 
-    std::istringstream ilat{result.at(1)};
-    double lat;
-    if (!(ilat >> lat))
-        lat = 0;
+    double lat, longi;
+    istringstream i(result.at(1));
+    i >> lat;
 
-    std::istringstream ilongi{result.at(2)};
-    double longi;
-    if (!(ilongi>> longi))
-        longi = 0;
+    istringstream i1(result.at(2));
+    i1 >> longi;
 
     boat->setLocation(lat, longi);
     //boat->setCap(result.at(3) == "NORTH" ? NORTH : (result.at(3) == "EAST" ? EAST : (result.at(3) == "WEST" ? WEST : SOUTH)));

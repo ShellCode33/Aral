@@ -25,4 +25,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    map.js
+    map.js \
+    on_list_view_clic.js

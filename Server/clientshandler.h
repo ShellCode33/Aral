@@ -26,6 +26,8 @@ public:
     void send_string_to(Client *client, std::string msg);
     Packet receive_packet_from(Client *client);
     void removeClient(Client *client);
+    std::vector<Client *> getClients() const;
+    void send_packet_to(Client *client, Packet packet);
 
 private:
     std::vector<Client*> _clients;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <sstream>
 
 enum VDirection {
     NORTH,
@@ -38,6 +39,7 @@ public:
     std::string getLastTimeReceiving() const;
     void setTime(const std::string & time);
     static Boat * create(const std::string & boat_string);
+    static void processBoatString(const std::string &boat_string, std::vector<std::string> & result);
 #endif
 
 private:
@@ -49,7 +51,6 @@ private:
 #ifndef BEACON
     std::vector<std::pair<double, double>> _location_history;
     std::string _last_time_receiving;
-    static void processBoatString(const std::string &boat_string, std::vector<std::string> & result);
 #endif
 };
 

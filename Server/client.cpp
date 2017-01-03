@@ -39,6 +39,7 @@ void Client::process_requests()
 
             break;
 
+            /*
         case GET_BOAT:
             cout << "Client " << _client_id << " asks GET_BOATS !" << endl;
             string name = _clients_handler.receive_string_from(this); //On récupère le nom demandé par le client
@@ -53,6 +54,7 @@ void Client::process_requests()
             }
 
             break;
+            */
         }
     }
 

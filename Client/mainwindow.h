@@ -8,6 +8,7 @@
 #include <QAbstractItemView>
 #include <thread>
 #include <QFile>
+#include <thread>
 
 #include "socketmanager.h"
 #include "../Common/boat.h"
@@ -22,9 +23,10 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
     void create_boat(const string &boat_string);
-    void map_refresh();
+    void update_boat(const string &boat_string);
+    void run_refresh_thread(SocketManager &socketManager);
+    ~MainWindow();
 
 private slots:
     void on_webview_load_over();
@@ -37,6 +39,9 @@ private:
     std::vector<Boat*> _boats;
     QStringListModel *_list_model;
 
+    std::thread *_refresh_thread;
+    bool _refresh_running;
+    void refresh(SocketManager *socketManager);
 };
 
 #endif // MAINWINDOW_H
