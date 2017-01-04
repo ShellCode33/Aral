@@ -35,26 +35,26 @@ void BeaconsHandler::run()
 
         if(boat_string.length() > 0)
         {
+            Boat *boat_received = Boat::create(boat_string); //On crée un bateau à partir de la chaine de carac que l'on recoit
             Boat *boat_to_update = nullptr;
 
             for(Boat *boat : _boats)
             {
-                if(boat->toString() == boat_string)
+                if(boat->getName() == boat_received->getName())
                 {
                     boat_to_update = boat;
                     break;
                 }
             }
 
-            Boat *boat = Boat::create(boat_string); //On crée un bateau à partir de la chaine de carac que l'on recoit
 
             if(boat_to_update != nullptr)
             {
+                cout << boat_received->getName() << " updated" << endl;
                 //update du bateau
-                boat_to_update->setCap(boat->getCap());
-                boat_to_update->setLocation(boat->getLatitude(), boat->getLongitude());
+                boat_to_update->setCap(boat_received->getVdirection(), boat_received->getHdirection());
+                boat_to_update->setLocation(boat_received->getLatitude(), boat_received->getLongitude());
                 boat_to_update->setTime("13h37");
-                delete boat;
 
                 for(Client *client : _clients_handler.getClients())
                 {
@@ -65,12 +65,12 @@ void BeaconsHandler::run()
 
             else
             {
-                _boats.push_back(boat);
+                _boats.push_back(boat_received);
 
                 for(Client *client : _clients_handler.getClients())
                 {
                     _clients_handler.send_packet_to(client, BOAT_CREATED);
-                    _clients_handler.send_string_to(client, boat_to_update->toString());
+                    _clients_handler.send_string_to(client, boat_received->toString());
                 }
             }
 

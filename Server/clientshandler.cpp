@@ -43,6 +43,7 @@ Packet ClientsHandler::receive_packet_from(Client *client)
             cerr << "receiving packet error !" << endl;
             exit(EXIT_FAILURE);
             */
+            return ERROR;
         }
 
         bytes_received += received;
@@ -190,18 +191,13 @@ string ClientsHandler::receive_string_from(Client *client)
 
 void ClientsHandler::removeClient(Client *client)
 {
-    cout << "Removing client " << client->getId() << "... ";
     vector<Client*>::iterator it = find(_clients.begin(), _clients.end(), client);
 
     if(it != _clients.end())
     {
         _clients.erase(it);
         delete client;
-        cout << " done !" << endl;
     }
-
-    else
-        cout << " error !" << endl;
 }
 
 ClientsHandler::~ClientsHandler()

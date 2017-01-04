@@ -28,9 +28,11 @@ string Boat::capToString() const
     case SOUTH:
         cap += "SOUTH";
         break;
+    default: break;
     }
 
-    cap += " ";
+    if(cap.length() > 0)
+        cap += " ";
 
     switch (_hdirection) {
     case EAST:
@@ -38,6 +40,9 @@ string Boat::capToString() const
         break;
     case WEST:
         cap += "WEST";
+        break;
+    default:
+        cap.erase(cap.begin() + cap.length(), cap.end()); //On enlève l'espace de la fin
         break;
     }
 
@@ -56,6 +61,15 @@ double Boat::getLongitude() const
 
 string Boat::toString() const
 {
+    //current time
+    auto t = time(nullptr);
+    auto tm = *localtime(&t);
+
+    std::ostringstream oss;
+    oss << put_time(&tm, "%d-%m-%Y %H-%M-%S");
+    string time = oss.str();
+
+
     string boat_string;
     boat_string.append(_name);
     boat_string.append(":");
@@ -65,7 +79,7 @@ string Boat::toString() const
     boat_string.append(":");
     boat_string.append(capToString());
     boat_string.append(":");
-    boat_string.append("4h20");
+    boat_string.append(time);
     return boat_string;
 }
 
@@ -74,7 +88,6 @@ string Boat::getLastTimeReceiving() const
     return _last_time_receiving;
 }
 
-#ifndef BEACON
 //static
 void Boat::processBoatString(const string & boat_string, vector<string> & result)
 {
@@ -118,7 +131,7 @@ Boat* Boat::create(const string &boat_string)
     i1 >> longi;
 
     boat->setLocation(lat, longi);
-    //boat->setCap(result.at(3) == "NORTH" ? NORTH : (result.at(3) == "EAST" ? EAST : (result.at(3) == "WEST" ? WEST : SOUTH)));
+    boat->setCap(result.at(3));
     boat->setTime(result.at(4));
 
     return boat;
@@ -127,6 +140,41 @@ Boat* Boat::create(const string &boat_string)
 VDirection Boat::getVdirection() const
 {
     return _vdirection;
+}
+
+void Boat::setCap(const VDirection &vdirection, const HDirection &hdirection)
+{
+    _vdirection = vdirection;
+    _hdirection = hdirection;
+}
+
+//permet de définir le cap à partir d'une chaine de caractère, exemple : "NORTH EAST"
+void Boat::setCap(const string & cap)
+{
+    _vdirection = V_NONE;
+    _hdirection = H_NONE;
+
+    if(cap.length() <= 0)
+        return;
+
+    string part1, part2;
+
+    unsigned int i;
+    for(i = 0; i < cap.length() && cap[i] != ' '; i++)
+        part1 += cap[i];
+
+    for(i++; i < cap.length(); i++)
+        part2 += cap[i];
+
+    if(part1 == "NORTH")
+        _vdirection = NORTH;
+    else if(part1 == "SOUTH")
+        _vdirection = SOUTH;
+
+    if(part2 == "EAST")
+        _hdirection = EAST;
+    else if(part2 == "WEST")
+        _hdirection = WEST;
 }
 
 void Boat::setVdirection(const VDirection &vdirection)
@@ -143,4 +191,3 @@ void Boat::setHdirection(const HDirection &hdirection)
 {
     _hdirection = hdirection;
 }
-#endif

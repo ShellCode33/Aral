@@ -1,7 +1,7 @@
 #include "datasender.h"
 
 DataSender::DataSender()
-    : _serv_addr {0}, _message {}
+    : _serv_addr {0, 0, 0, 0}, _message {}
 {
     _serv_addr.sin_port = htons(PORT);
     _serv_addr.sin_family = AF_INET;

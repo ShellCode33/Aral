@@ -7,15 +7,12 @@
 #include <utility>
 
 #include "datasender.h"
-
-
-#define BEACON //On se définit comme étant une balise afin de ne pas compiler ce qui ne nous concerne pas dans boat.h et boat.cpp
 #include "../Common/boat.h"
 
-const int MIN_LAT = 44.414753;
-const int MAX_LAT = 45.522321;
-const int MIN_LNG = 59.427795;
-const int MAX_LNG = 59.878235;
+const double MIN_LAT = 44.414753;
+const double MAX_LAT = 45.522321;
+const double MIN_LNG = 59.427795;
+const double MAX_LNG = 59.878235;
 
 using namespace std;
 
@@ -36,6 +33,7 @@ void updateBoat(Boat &b)
     case SOUTH:
         lat += rand()/(RAND_MAX * 10.);
         break;
+    default: break;
     }
 
     switch (b.getHdirection()) {
@@ -45,9 +43,10 @@ void updateBoat(Boat &b)
     case WEST:
         lng -= rand()/(RAND_MAX * 10.);
         break;
+    default: break;
     }
 
-    b.setLocation(lat, lng);
+    bool is_allowed_position = true;
 
     if(lat < MIN_LAT || lat > MAX_LAT)
     {
@@ -59,9 +58,11 @@ void updateBoat(Boat &b)
             b.setVdirection(NORTH);
             break;
         default:
-            b.setVdirection(static_cast<VDirection>(rand()%3 + 1));
+            b.setVdirection(static_cast<VDirection>(rand()%3));
             break;
         }
+
+        is_allowed_position = false;
     }
 
     if(lng < MIN_LNG || lng > MAX_LNG)
@@ -74,10 +75,15 @@ void updateBoat(Boat &b)
             b.setHdirection(EAST);
             break;
         default:
-            b.setHdirection(static_cast<HDirection>(rand()%3 + 1));
+            b.setHdirection(static_cast<HDirection>(rand()%3));
             break;
         }
+
+        is_allowed_position = false;
     }
+
+    if(is_allowed_position)
+        b.setLocation(lat, lng);
 }
 
 int main(int argc, char **argv)
@@ -91,12 +97,14 @@ int main(int argc, char **argv)
     srand(time(NULL));
 
     Boat boat(argv[1]);
-    boat.setHdirection(static_cast<HDirection>(rand() % 3 + 1));
-    boat.setVdirection(static_cast<VDirection>(rand() % 3 + 1));
+    boat.setHdirection(static_cast<HDirection>(rand() % 3));
 
-    //position aléatoire dans le golf du mexique
-    //45.522321 59.427795
-    //44.414753 59.878235
+    if(boat.getHdirection() == H_NONE) //Si HDirection est à NONE, on ne permet pas que Vdirection le soit
+        boat.setVdirection(static_cast<VDirection>(rand() % 2));
+
+    else
+        boat.setVdirection(static_cast<VDirection>(rand() % 3));
+
     boat.setLocation(random_range(MIN_LAT, MAX_LAT), random_range(MIN_LNG, MAX_LNG));
 
     DataSender sender;

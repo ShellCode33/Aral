@@ -26,9 +26,8 @@ void Client::process_requests()
     {
         Packet packet = _clients_handler.receive_packet_from(this);
 
-        switch(packet)
+        if(packet == GET_ALL_BOATS)
         {
-        case GET_ALL_BOATS:
             cout << "Client " << _client_id << " asks GET_ALL_BOATS !" << endl;
             _clients_handler.send_integer_to(this, boats.size()); //On envoit le nombre de bateaux à réceptionner
 
@@ -36,25 +35,11 @@ void Client::process_requests()
 
             for(int i = 0; i < (int)boats.size(); i++)
                 _clients_handler.send_string_to(this, boats.at(i)->toString());
+        }
 
-            break;
-
-            /*
-        case GET_BOAT:
-            cout << "Client " << _client_id << " asks GET_BOATS !" << endl;
-            string name = _clients_handler.receive_string_from(this); //On récupère le nom demandé par le client
-
-            for(Boat * boat : boats)
-            {
-                if(boat->getName() == name) //On le trouve
-                {
-                    _clients_handler.send_string_to(this, boat->toString()); //Et on l'envoie
-                    break;
-                }
-            }
-
-            break;
-            */
+        else if(packet == ERROR)
+        {
+            _job_active = false;
         }
     }
 

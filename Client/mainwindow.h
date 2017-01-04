@@ -38,10 +38,13 @@ private:
     QStringList _values;
     std::vector<Boat*> _boats;
     QStringListModel *_list_model;
+    std::string _markers_js;
 
-    std::thread *_refresh_thread;
     bool _refresh_running;
+    bool _is_web_view_loaded;
+    std::thread *_refresh_thread;
     void refresh(SocketManager *socketManager);
+    std::vector<std::string> _js_commands_queue;
 };
 
 #endif // MAINWINDOW_H

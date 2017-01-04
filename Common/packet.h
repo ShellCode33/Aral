@@ -5,7 +5,8 @@ enum Packet
 {
     GET_ALL_BOATS,
     BOAT_CREATED,
-    BOAT_UPDATED
+    BOAT_UPDATED,
+    ERROR
 };
 
 #endif

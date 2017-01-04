@@ -61,21 +61,6 @@ function initialize() {
     update_markers();
 }
 
-function open(boat)
-{
-    if(navigator.onLine)
-    {
-        for(i = 0; i < boatsArray.length; i++)
-        {
-            if(boatsArray[i][0] == boat[0])
-            {
-                google.maps.event.trigger(markers[i], 'click');
-                break;
-            }
-        }
-    }
-}
-
 function add_marker(boat) {
     boatsArray.push(boat);
 
@@ -119,6 +104,7 @@ function add_marker(boat) {
             }
         })(i));
 
+        // Automatically center the map fitting all markers on the screen
         map.fitBounds(bounds);
     }
 }
@@ -132,10 +118,7 @@ function update_marker(boat) {
             boatsArray[i][2] = boat[2];
             boatsArray[i][3] = boat[3];
             boatsArray[i][4] = boat[4];
-            var position = new google.maps.LatLng(boatsArray[i][1], boatsArray[i][2]);
-            bounds.extend(position);
-            markers[i].setPosition(position)
-            //map.fitBounds(bounds);
+            markers[i].setPosition(new google.maps.LatLng(boatsArray[i][1], boatsArray[i][2]))
             break;
         }
     }
