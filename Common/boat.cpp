@@ -171,9 +171,9 @@ void Boat::setCap(const string & cap)
     else if(part1 == "SOUTH")
         _vdirection = SOUTH;
 
-    if(part2 == "EAST")
+    if(part1 == "EAST" || part2 == "EAST")
         _hdirection = EAST;
-    else if(part2 == "WEST")
+    else if(part1 == "WEST" || part2 == "WEST")
         _hdirection = WEST;
 }
 

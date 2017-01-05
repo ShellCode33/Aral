@@ -116,6 +116,7 @@ function add_marker(boat) {
                 lastCalledInfoWindow = infoWindow;
 
                 infoWindow.open(map, markers[i]);
+                throw boat;
             }
         })(i));
 
@@ -125,21 +126,22 @@ function add_marker(boat) {
 
 function update_marker(boat) {
 
-    for(i = 0; i < boatsArray.length; i++) {
-        if(boatsArray[i][0] == boat[0]) {
-            //throw boatsArray[i];
-            boatsArray[i][1] = boat[1];
-            boatsArray[i][2] = boat[2];
-            boatsArray[i][3] = boat[3];
-            boatsArray[i][4] = boat[4];
-            var position = new google.maps.LatLng(boatsArray[i][1], boatsArray[i][2]);
-            bounds.extend(position);
-            markers[i].setPosition(position)
-            //map.fitBounds(bounds);
-            break;
+    if(navigator.onLine) {
+        for(i = 0; i < boatsArray.length; i++) {
+            if(boatsArray[i][0] == boat[0]) {
+                //throw boatsArray[i];
+                boatsArray[i][1] = boat[1];
+                boatsArray[i][2] = boat[2];
+                boatsArray[i][3] = boat[3];
+                boatsArray[i][4] = boat[4];
+                var position = new google.maps.LatLng(boatsArray[i][1], boatsArray[i][2]);
+                bounds.extend(position);
+                markers[i].setPosition(position)
+                //map.fitBounds(bounds);
+                break;
+            }
         }
     }
-
 }
 
 function update_markers() {

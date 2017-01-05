@@ -145,6 +145,8 @@ void MainWindow::update_boat(const string & boat_string)
         if(boat->getName() == result.at(0)) //boat found
         {
             //cout << "update " << boat->getName() << endl;
+            cout << boat_string << endl;
+
             QLocale c(QLocale::C);
             double lat = c.toDouble(result.at(1).c_str());
             double longi = c.toDouble(result.at(2).c_str());

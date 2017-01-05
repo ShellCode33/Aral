@@ -51,10 +51,12 @@ void BeaconsHandler::run()
             if(boat_to_update != nullptr)
             {
                 cout << boat_received->getName() << " updated" << endl;
-                //update du bateau
+                cout << boat_received->capToString() << endl;
                 boat_to_update->setCap(boat_received->getVdirection(), boat_received->getHdirection());
                 boat_to_update->setLocation(boat_received->getLatitude(), boat_received->getLongitude());
-                boat_to_update->setTime("13h37");
+                boat_to_update->setTime(boat_received->getLastTimeReceiving());
+
+                cout << "sending : " << boat_to_update->toString() << " to clients !" << endl;
 
                 for(Client *client : _clients_handler.getClients())
                 {
